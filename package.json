@@ -9,7 +9,7 @@
     "build": "parcel build --public-url . --no-source-maps index.html"
   },
   "devDependencies": {
-    "@logseq/libs": "^0.0.1-alpha.31",
+    "@logseq/libs": "^0.0.1-alpha.34",
     "parcel": "^2.0.0"
   },
   "dependencies": {},
