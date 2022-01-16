@@ -1,7 +1,7 @@
 {
   "name": "logseq-templater-plugin",
   "version": "0.0.1",
-  "description": "A plugin to replicate the template block in notion",
+  "description": "A plugin to replicate template buttons in notion",
   "author": "@sawhney17",
   "license": "MIT",
   "scripts": {
