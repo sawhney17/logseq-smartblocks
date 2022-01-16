@@ -1,7 +1,10 @@
 name: Build plugin
 
 on:
-  workflow_dispatch:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - '*' # Push events to matching any tag format, i.e. 1.0, 20.15.10
 
 env:
   PLUGIN_NAME: logseq-templater-plugin
