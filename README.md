@@ -28,8 +28,20 @@ Still in beta!
 	- {{renderer :property_visualizer, {property name}, {type of graph or table}, {graph or table}, 40}}
 4. Base the types from the readme of either plugin
 5. Samples
-	6. `{{renderer :property_visualizer, happiness, line white 300, chart, 40}}`
-	7. `{{renderer :property_visualizer, fulfillment}}`
+	- `{{renderer :property_visualizer, happiness, line white 300, chart, 40}}`
+		- Will generate lined chart, with width 300, color white, graphing property "happiness"
+		- <img width="653" alt="Screen Shot 2022-01-17 at 9 31 53 PM" src="https://user-images.githubusercontent.com/80150109/149814988-48493d84-647c-4d22-bb2e-f6ea11d8e388.png">
+
+	- `{{renderer :property_visualizer, fulfillment}}`
+		- Will generate table with sum, median and average.
+		- <img width="579" alt="Screen Shot 2022-01-17 at 9 30 51 PM" src="https://user-images.githubusercontent.com/80150109/149814871-c8253215-8ce3-40ef-a5d0-851396f11c11.png">
+
+	- `{{renderer :property_visualizer, happiness, data nosum}}`
+		- Will generate simple table showing the values of happiness
+		- <img width="709" alt="Screen Shot 2022-01-17 at 9 34 52 PM" src="https://user-images.githubusercontent.com/80150109/149815377-14e64b2a-03c3-48d3-956d-15388b637218.png">
+6. Important: Will only fetch page properties of journal pages
+	- Add a page property to every journal page when you want to track something
+	- Track habits, word written, etc. 
 
 
 
