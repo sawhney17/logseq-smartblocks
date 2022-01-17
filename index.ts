@@ -15,6 +15,15 @@ async function main () {
     Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '');
+  function timeConverter(x){
+    var a = new Date(x * 1000);
+    var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time = year + month + date;
+    return time;
+  }
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
             const { blockUuid, template } = e.dataset
@@ -61,8 +70,8 @@ async function main () {
             [?b :block/properties ?p]
             [(get ?p :${propertyName})]]
      `
-     console.log(propertyName)
      console.log(range)
+ 
             try {
                 let ret = await logseq.DB.datascriptQuery(query)
                 // ret.result-trn
@@ -82,7 +91,11 @@ async function main () {
                 let header_uuid = headerBlock.uuid
                 let x_uuid = x_value_block.uuid
                 let y_uuid = y_value_block.uuid
-
+                //defining time filters    
+                let date = Math.round((new Date()). getTime() / 1000);
+                let adjustedDate = date - range*86400  
+                console.log(adjustedDate)
+                let cutoff = timeConverter(adjustedDate)
 
                 if(result0 && result0.length > 0) { //Ensuring that the results of the datascript query isn't empty
                     var results = []
@@ -90,7 +103,10 @@ async function main () {
                         try {
                             if ([result0[constant]][0]["journal?"]){
                                 if (![result0[constant]][0]["page"]!= undefined){
+                                  if([result0[constant]][0]["journal-day"] > cutoff){
+                                    console.log("success")
                                     results.push([result0[constant]][0])
+                                  }
                                 }
                             }
                         }
