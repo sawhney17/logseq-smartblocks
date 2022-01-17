@@ -24,7 +24,12 @@ Still in beta!
 #### Setup
 1. First ensure that you have [hkgnp's](https://github.com/hkgnp) [Table Render](https://github.com/hkgnp/logseq-tablerender-plugin) and [Chart Render](https://github.com/hkgnp/logseq-chartrender-plugin) plugins
 2. Use the slash menu and type `property visualizer`
-3. 
+3. Assign variables in the syntax
+	- {{renderer :property_visualizer, {property name}, {type of graph or table}, {graph or table}, 40}}
+4. Base the types from the readme of either plugin
+5. Samples
+	6. `{{renderer :property_visualizer, happiness, line white 300, chart, 40}}`
+	7. `{{renderer :property_visualizer, fulfillment}}`
 
 
 
