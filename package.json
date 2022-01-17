@@ -1,6 +1,6 @@
 {
   "name": "logseq-templater-plugin",
-  "version": "0.0.1",
+  "version": "1.2.1",
   "description": "A plugin to replicate template buttons in notion",
   "author": "@sawhney17",
   "license": "MIT",
@@ -12,7 +12,8 @@
     "@logseq/libs": "^0.0.1-alpha.34",
     "parcel": "^2.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "logseq": {
     "id": "_km4vf6swk",
     "main": "dist/index.html",
