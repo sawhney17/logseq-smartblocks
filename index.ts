@@ -160,14 +160,25 @@ async function main () {
       });
       
       logseq.Editor.registerSlashCommand('property visualizer', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, , , , }}`);
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, }}`);
       });
 
       logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
         var [type, template, title, displayStyle, dateRange] = payload.arguments;
-        if (title == undefined){
+        if (title == undefined && type==":templater"){
           title = "New Template"
         }
+        if (title == undefined && type==":property_visualizer"){
+          title = "data"
+        }
+
+        if (displayStyle == undefined && type==":property_visualizer"){
+          displayStyle = "table"
+        }
+        if (dateRange == undefined && type==":property_visualizer"){
+          dateRange = "10000"
+        }
+
         
         if (type ==':templater'){
         logseq.provideUI({
