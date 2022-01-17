@@ -11,6 +11,10 @@ import {
 
 
 async function main () {
+  const uniqueIdentifier = () =>
+    Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, '');
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
             const { blockUuid, template } = e.dataset
@@ -49,6 +53,85 @@ async function main () {
             }
 
           },
+          async insertFormattedBlock (e: any) {
+            const { blockUuid, propertyName, title, displayer, range} = e.dataset
+            var query = `
+            [:find (pull ?b [*])
+            :where
+            [?b :block/properties ?p]
+            [(get ?p :${propertyName})]]
+     `
+     console.log(propertyName)
+     console.log(range)
+            try {
+                let ret = await logseq.DB.datascriptQuery(query)
+                // ret.result-trn
+                const result0 = ret?.flat()
+                logseq.Editor.insertBlock(blockUuid, title, {sibling:false})
+                
+                logseq.Editor.insertBlock(blockUuid, "Date", {sibling:false})
+                logseq.Editor.insertBlock(blockUuid, propertyName, {sibling:false})
+
+                let parentBlock = await logseq.Editor.getBlock(blockUuid, {includeChildren:true})
+                console.log(parentBlock)
+                if (parentBlock?.children) { //Checking to make sure blocks were successfully created
+                //defining constants
+                let headerBlock = parentBlock.children[0]
+                let x_value_block = parentBlock.children[1]
+                let y_value_block = parentBlock.children[2]
+                let header_uuid = headerBlock.uuid
+                let x_uuid = x_value_block.uuid
+                let y_uuid = y_value_block.uuid
+
+
+                if(result0 && result0.length > 0) { //Ensuring that the results of the datascript query isn't empty
+                    var results = []
+                    for (const constant in result0) {
+                        try {
+                            if ([result0[constant]][0]["journal?"]){
+                                if (![result0[constant]][0]["page"]!= undefined){
+                                    results.push([result0[constant]][0])
+                                }
+                            }
+                        }
+                        catch(err){
+                            console.log(err)
+                        }
+                    }
+                    console.log([results][0][0])
+                    results.sort((a, b) => {
+                        return [a][0]["journal-day"] - [b][0]["journal-day"];
+                    });
+                    for (const constant in results) {
+                    // try {if ([results[constant]][0]["journal?"]){
+                    // if (![results[constant]][0]["pre-block?"]){
+
+                        if ([results[constant]][0]["original-name"] !== undefined){
+                        logseq.Editor.insertBlock(x_uuid,[results[constant]][0]["original-name"], {sibling:false});
+                        logseq.Editor.insertBlock(y_uuid,String([results[constant]][0]["properties"][propertyName]),{sibling: false});
+                            // console.log([results[constant]][0]["properties"][propertyName])
+                            // console.log([results[constant]][0]["page"])
+                        }
+                    }
+
+                    // }
+                // }
+                    // catch(err){
+                    //     console.log(err)
+                    // }
+                  }
+                  console.log("Hello")
+                  logseq.Editor.updateBlock(blockUuid, `{{renderer :${displayer}s_${uniqueIdentifier()}}}`);
+                  logseq.Editor.moveBlock(y_uuid, header_uuid,{children:true});
+                  logseq.Editor.moveBlock(x_uuid, header_uuid,{children:true});
+                }
+                  
+                }
+             catch (err) {
+                console.log(err)
+              }
+            
+          },
     }),
     logseq.provideStyle(`
     .templater-btn {
@@ -75,18 +158,18 @@ async function main () {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, , }} `);
         templaterBlock = await logseq.Editor.getCurrentBlock();
       });
+      
+      logseq.Editor.registerSlashCommand('property visualizer', async () => {
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, , , , }}`);
+      });
 
       logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
-        var [type, template, title] = payload.arguments;
-        const UUID = payload.uuid
+        var [type, template, title, displayStyle, dateRange] = payload.arguments;
         if (title == undefined){
           title = "New Template"
         }
-
-        const id = type.split('_')[1]?.trim();
-        const templateID = `template_${id}`;
         
-        if (type !== ':templater') return;
+        if (type ==':templater'){
         logseq.provideUI({
             key: 'logseq wordcount plugin',
             reset: true,
@@ -96,6 +179,20 @@ async function main () {
             data-on-click="insertTemplatedBlock">${title}</button>
            `,
           });
+        }
+
+          if (type == ':property_visualizer'){
+          logseq.provideUI({
+              key: 'logseq visualizer plugin',
+              reset: true,
+              slot,
+              template: `
+              <button class="templater-btn" data-block-uuid="${payload.uuid}" data-property-name="${template}" data-title="${title}" data-displayer="${displayStyle}" data-range="${dateRange}"
+              data-on-click="insertFormattedBlock">Format Property to Table</button>
+             `,
+            });
+          }
+          else return;
       });
 }
 
