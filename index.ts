@@ -215,7 +215,7 @@ async function main () {
               slot,
               template: `
               <button class="templater-btn" data-block-uuid="${payload.uuid}" data-property-name="${template}" data-title="${title}" data-displayer="${displayStyle}" data-range="${dateRange}"
-              data-on-click="insertFormattedBlock">Format Property to Table</button>
+              data-on-click="insertFormattedBlock">Visualize ${template} as ${displayStyle}</button>
              `,
             });
           }
