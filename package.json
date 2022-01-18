@@ -13,6 +13,7 @@
     "parcel": "^2.0.0"
   },
   "dependencies": {
+    "sherlockjs": "^1.4.2"
   },
   "logseq": {
     "id": "_km4vf6swk",

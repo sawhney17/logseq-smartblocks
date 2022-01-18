@@ -4,6 +4,7 @@ import {
   PageEntity,
   IBatchBlock,
 } from '@logseq/libs/dist/LSPlugin.user';
+import Sherlock from 'sherlockjs';
 /**
 * main entry
 */
@@ -11,22 +12,93 @@ import {
 
 
 async function main () {
+  const userConfigs = await logseq.App.getUserConfigs();
+  const preferredDateFormat2 = userConfigs.preferredDateFormat;
   const uniqueIdentifier = () =>
     Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '');
   function timeConverter(x){
     var a = new Date(x * 1000);
-    var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    // var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var year = a.getFullYear();
-    var month = months[a.getMonth()];
+    // var month = months[a.getMonth()];
+    var month = a.getMonth()+1
     var date = a.getDate();
     var time = year + month + date;
+    console.log(time)
     return time;
+  }
+  const getOrdinalNum = (n: number) => {
+    return (
+      n +
+      (n > 0
+        ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
+        : '')
+    );
+  };
+  
+  const getDateForPage = (d: Date, preferredDateFormat: string) => {
+    const getYear = d.getFullYear();
+    const getMonth = d.toString().substring(4, 7);
+    const getMonthNumber = d.getMonth() + 1;
+    const getDate = d.getDate();
+  
+    if (preferredDateFormat === 'MMM do yyyy') {
+      return `${getMonth} ${getOrdinalNum(getDate)}, ${getYear}`;
+    } else if (
+      preferredDateFormat.includes('yyyy') &&
+      preferredDateFormat.includes('MM') &&
+      preferredDateFormat.includes('dd') &&
+      ('-' || '_' || '/')
+    ) {
+      var mapObj = {
+        yyyy: getYear,
+        dd: ('0' + getDate).slice(-2),
+        MM: ('0' + getMonthNumber).slice(-2),
+      };
+      let dateStr = preferredDateFormat;
+      dateStr = dateStr.replace(/yyyy|dd|MM/gi, function (matched) {
+        return mapObj[matched];
+      });
+      return dateStr;
+    } else {
+      return `[[${getMonth} ${getOrdinalNum(getDate)}, ${getYear}]]`;
+    }
+  };
+  async function parseDynamically(blockContent){
+  // Implement date parsing
+
+  console.log(blockContent)
+  if (blockContent == "<%currentTime%>" || blockContent == "<%Current Time%>" || blockContent =="<%Time%>" || blockContent == "<%current time%>"){
+        let currentTime = new Date()
+        console.log("FRee tiem")
+        let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
+        return(formattedTime)
+  }
+  // for (const keyword in specialKeywords){
+  //   if (1!=1){
+  //   let currentTime = new Date()
+  //   console.log("FRee tiem")
+  //   let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
+  //   blockContent.replace(keyword, formattedTime)}
+  // }
+  const parsedBlock = await Sherlock.parse(blockContent);
+  // Destructure
+  const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
+  if (startDate == null){
+    return blockContent
+  }
+   console.log(blockContent)
+   console.log(getDateForPage(startDate, preferredDateFormat2))
+  return(getDateForPage(startDate, preferredDateFormat2))
+return startDate
+
   }
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
             const { blockUuid, template } = e.dataset
+            let reg = /<%([^%].*?)%>/g
             var query = `
             [:find (pull ?b [*])
            :where
@@ -49,7 +121,57 @@ async function main () {
                       logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
                     } else {
                       const childBlocksArr: IBatchBlock = origBlock.children;
-                  
+                      for (const constant2 in childBlocksArr){ //First child block
+                        for (const constant3 in childBlocksArr[constant2]["children"]){ //Second child block
+                          for (const constant4 in childBlocksArr[constant2]["children"][constant3]["children"]){ // parsing third child blcok 
+                            let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
+                            let regexMatched = initiallyParsed.match(reg)
+                            for (const x in regexMatched){
+                              let toBeParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
+                              var currentMatch = regexMatched[x]
+                              let formattedMatch = await parseDynamically(currentMatch);
+                              console.log(childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"])
+                              console.log(currentMatch)
+                              console.log(formattedMatch)
+                              let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+                              let toBeChanged = newRegexString
+                              console.log(newRegexString)
+                              console.log(toBeChanged)
+                              childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"] = toBeChanged
+                            }  }
+                          let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["content"]
+                          let regexMatched = initiallyParsed.match(reg)
+                          for (const x in regexMatched){
+                            let toBeParsed = childBlocksArr[constant2]["children"][constant3]["content"]
+                            var currentMatch = regexMatched[x]
+                            let formattedMatch = await parseDynamically(currentMatch);
+                            console.log(childBlocksArr[constant2]["children"][constant3]["content"])
+                            console.log(currentMatch)
+                            console.log(formattedMatch)
+                            let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+                            let toBeChanged = newRegexString
+                            console.log(newRegexString)
+                            console.log(toBeChanged)
+                            childBlocksArr[constant2]["children"][constant3]["content"] = toBeChanged
+                          }
+                            
+                        }
+                            let initiallyParsed = childBlocksArr[constant2]["content"]
+                            let regexMatched = initiallyParsed.match(reg)
+                            for (const x in regexMatched){
+                              let toBeParsed = childBlocksArr[constant2]["content"]
+                              var currentMatch = regexMatched[x]
+                              let formattedMatch = await parseDynamically(currentMatch);
+                              console.log(childBlocksArr[constant2]["content"])
+                              console.log(currentMatch)
+                              console.log(formattedMatch)
+                              let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+                              let toBeChanged = newRegexString
+                              console.log(newRegexString)
+                              console.log(toBeChanged)
+                              childBlocksArr[constant2]["content"] = toBeChanged
+                            }
+                    }
                       await logseq.Editor.insertBatchBlock(blockUuid, childBlocksArr, {
                         before: false,
                         sibling: false,
@@ -198,7 +320,7 @@ async function main () {
         
         if (type ==':templater'){
         logseq.provideUI({
-            key: 'logseq wordcount plugin',
+            key: 'logseq templater plugin',
             reset: true,
             slot,
             template: `
