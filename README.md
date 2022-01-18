@@ -12,6 +12,8 @@ This plugin allows you to create a templater button, which on click, inserts the
 
 ![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662207-c95a285a-fe4c-4e9f-b4d4-b2154330eebd.gif)
 
+### Usage in action
+![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662222-79f0fa35-c2d8-4070-93d9-a39b0b7b4982.gif)
 ### Using NLP
 1. In the templates, wherever you want a dynamic date, one that shows a different value based on the date it was inserted, use this syntax `<%NLP Input%>`
 	- `<%Today%>`
@@ -22,10 +24,10 @@ This plugin allows you to create a templater button, which on click, inserts the
 	- Your format will automatically generate a specific date 
 3. Support Aliases
 	- `[tomorrow](<%tomorrow%>)` in the template generates `[tomorrow]([[Jan 19th, 2022]])`
-### Usage in action
-![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662222-79f0fa35-c2d8-4070-93d9-a39b0b7b4982.gif)
+![Screen Recording 2022-01-18 at 12 36 29 PM](https://user-images.githubusercontent.com/80150109/149903174-1187c911-76c3-44be-87dc-a35e5fb37d5a.gif)
 
-### Known issues
+
+### Limitations
 - Only works with dynamic variables up to 4 blocks deep 
 
 ### TODO
