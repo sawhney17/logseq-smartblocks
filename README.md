@@ -16,13 +16,17 @@ This plugin allows you to create a templater button, which on click, inserts the
 1. In the templates, wherever you want a dynamic date, one that shows a different value based on the date it was inserted, use this syntax `<%NLP Input%>`
 	- `<%Today%>`
 	- `<%Last monday%>`
-	- `<%current time%>`
+	- `<%current time%>` 
+	- `<%30th of december%>` 
 2. Automatically respects your date settings
 	- Your format will automatically generate a specific date 
 3. Support Aliases
 	- `[tomorrow](<%tomorrow%>)` in the template generates `[tomorrow]([[Jan 19th, 2022]])`
 ### Usage in action
 ![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662222-79f0fa35-c2d8-4070-93d9-a39b0b7b4982.gif)
+
+### Known issues
+- Only works with dynamic variables up to 4 blocks deep 
 
 ### TODO
 - [x] Enable support for natural language processing for dates allowing for dynamic dates (different date auto added based on current date)
