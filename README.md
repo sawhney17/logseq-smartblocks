@@ -60,3 +60,6 @@ Still in beta!
 1. Only works when property is mentioned on the page property of a journal page
 	- <img width="1011" alt="Screen Shot 2022-01-17 at 10 22 19 PM" src="https://user-images.githubusercontent.com/80150109/149821050-0c0b926b-a47e-4982-a301-cbb6c6cd8417.png">
 
+# Credits 
+- [Sherlockjs](https://github.com/neilgupta/Sherlock)
+- Thanks a ton to [hkgnp](https://github.com/hkgnp)and his [NLP plugin](https://github.com/hkgnp/logseq-datenlp-plugin) for implementation inspiration
