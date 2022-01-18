@@ -45,7 +45,7 @@ async function main () {
     const getDate = d.getDate();
   
     if (preferredDateFormat === 'MMM do yyyy') {
-      return `${getMonth} ${getOrdinalNum(getDate)}, ${getYear}`;
+      return `[[${getMonth} ${getOrdinalNum(getDate)}, ${getYear}]]`;
     } else if (
       preferredDateFormat.includes('yyyy') &&
       preferredDateFormat.includes('MM') &&
@@ -61,7 +61,7 @@ async function main () {
       dateStr = dateStr.replace(/yyyy|dd|MM/gi, function (matched) {
         return mapObj[matched];
       });
-      return dateStr;
+      return `[[${dateStr}]]`;
     } else {
       return `[[${getMonth} ${getOrdinalNum(getDate)}, ${getYear}]]`;
     }
@@ -70,7 +70,7 @@ async function main () {
   // Implement date parsing
 
   console.log(blockContent)
-  if (blockContent == "<%currentTime%>" || blockContent == "<%Current Time%>" || blockContent =="<%Time%>" || blockContent == "<%current time%>"){
+  if (blockContent.toLowerCase() == "<%currentTime%>" || blockContent.toLowerCase() =="<%time%>" || blockContent.toLowerCase() == "<%current time%>"){
         let currentTime = new Date()
         console.log("FRee tiem")
         let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
