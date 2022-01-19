@@ -297,8 +297,16 @@ return startDate
         templaterBlock = await logseq.Editor.getCurrentBlock();
       });
       
-      logseq.Editor.registerSlashCommand('property visualizer', async () => {
+      logseq.Editor.registerSlashCommand('Property Visualizer', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, }}`);
+      });
+      logseq.Editor.registerSlashCommand('Create Templater Block (guided)', async () => {
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, template name, button title}} `);
+        templaterBlock = await logseq.Editor.getCurrentBlock();
+      });
+      
+      logseq.Editor.registerSlashCommand('Property Visualizer (guided)', async () => {
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, property name, chart/table styling(eg. data nosum, area white 500), chart/table, date range}}`);
       });
 
       logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
