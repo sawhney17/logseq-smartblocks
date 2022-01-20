@@ -74,13 +74,6 @@ async function main () {
         let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
         return(formattedTime)
   }
-  // for (const keyword in specialKeywords){
-  //   if (1!=1){
-  //   let currentTime = new Date()
-  //   console.log("FRee tiem")
-  //   let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
-  //   blockContent.replace(keyword, formattedTime)}
-  // }
   const parsedBlock = await Sherlock.parse(blockContent);
   // Destructure
   const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
@@ -176,7 +169,6 @@ return startDate
  
             try {
                 let ret = await logseq.DB.datascriptQuery(query)
-                // ret.result-trn
                 const result0 = ret?.flat()
                 logseq.Editor.insertBlock(blockUuid, title, {sibling:false})
                 
@@ -220,22 +212,13 @@ return startDate
                         return [a][0]["journal-day"] - [b][0]["journal-day"];
                     });
                     for (const constant in results) {
-                    // try {if ([results[constant]][0]["journal?"]){
-                    // if (![results[constant]][0]["pre-block?"]){
 
                         if ([results[constant]][0]["original-name"] !== undefined){
                         logseq.Editor.insertBlock(x_uuid,[results[constant]][0]["original-name"], {sibling:false});
                         logseq.Editor.insertBlock(y_uuid,String([results[constant]][0]["properties"][propertyName]),{sibling: false});
-                            // console.log([results[constant]][0]["properties"][propertyName])
-                            // console.log([results[constant]][0]["page"])
                         }
                     }
 
-                    // }
-                // }
-                    // catch(err){
-                    //     console.log(err)
-                    // }
                   }
                   console.log("Hello")
                   logseq.Editor.updateBlock(blockUuid, `{{renderer :${displayer}s_${uniqueIdentifier()}}}`);
