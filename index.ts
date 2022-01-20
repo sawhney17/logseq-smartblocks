@@ -68,8 +68,6 @@ async function main () {
   };
   async function parseDynamically(blockContent){
   // Implement date parsing
-
-  console.log(blockContent)
   if (blockContent.toLowerCase() == "<%currentTime%>" || blockContent.toLowerCase() =="<%time%>" || blockContent.toLowerCase() == "<%current time%>"){
         let currentTime = new Date()
         console.log("FRee tiem")
@@ -89,7 +87,6 @@ async function main () {
   if (startDate == null){
     return blockContent
   }
-   console.log(blockContent)
    console.log(getDateForPage(startDate, preferredDateFormat2))
   return(getDateForPage(startDate, preferredDateFormat2))
 return startDate
@@ -111,16 +108,14 @@ return startDate
               let ret = await logseq.DB.datascriptQuery(query)
               const results = ret?.flat()
               if(results && results.length > 0) {
-                const index = Math.floor(Math.random() * results.length)
                 refUUID = results[0].uuid.$uuid$
                 const origBlock = await logseq.Editor.getBlock(refUUID, {
                   includeChildren: true,
                 });
-                console.log(origBlock)
                 if (origBlock.children.length === 0 || !origBlock.children) {
                       logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
                     } else {
-                      const childBlocksArr: IBatchBlock = origBlock.children;
+                      const childBlocksArr = origBlock.children as unknown as IBatchBlock
                       for (const constant2 in childBlocksArr){ //First child block
                         for (const constant3 in childBlocksArr[constant2]["children"]){ //Second child block
                           for (const constant4 in childBlocksArr[constant2]["children"][constant3]["children"]){ // parsing third child blcok 
@@ -130,13 +125,8 @@ return startDate
                               let toBeParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
                               var currentMatch = regexMatched[x]
                               let formattedMatch = await parseDynamically(currentMatch);
-                              console.log(childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"])
-                              console.log(currentMatch)
-                              console.log(formattedMatch)
                               let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
                               let toBeChanged = newRegexString
-                              console.log(newRegexString)
-                              console.log(toBeChanged)
                               childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"] = toBeChanged
                             }  }
                           let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["content"]
@@ -145,13 +135,8 @@ return startDate
                             let toBeParsed = childBlocksArr[constant2]["children"][constant3]["content"]
                             var currentMatch = regexMatched[x]
                             let formattedMatch = await parseDynamically(currentMatch);
-                            console.log(childBlocksArr[constant2]["children"][constant3]["content"])
-                            console.log(currentMatch)
-                            console.log(formattedMatch)
                             let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
                             let toBeChanged = newRegexString
-                            console.log(newRegexString)
-                            console.log(toBeChanged)
                             childBlocksArr[constant2]["children"][constant3]["content"] = toBeChanged
                           }
                             
@@ -162,13 +147,8 @@ return startDate
                               let toBeParsed = childBlocksArr[constant2]["content"]
                               var currentMatch = regexMatched[x]
                               let formattedMatch = await parseDynamically(currentMatch);
-                              console.log(childBlocksArr[constant2]["content"])
-                              console.log(currentMatch)
-                              console.log(formattedMatch)
                               let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
                               let toBeChanged = newRegexString
-                              console.log(newRegexString)
-                              console.log(toBeChanged)
                               childBlocksArr[constant2]["content"] = toBeChanged
                             }
                     }
@@ -204,19 +184,19 @@ return startDate
                 logseq.Editor.insertBlock(blockUuid, propertyName, {sibling:false})
 
                 let parentBlock = await logseq.Editor.getBlock(blockUuid, {includeChildren:true})
-                console.log(parentBlock)
                 if (parentBlock?.children) { //Checking to make sure blocks were successfully created
                 //defining constants
                 let headerBlock = parentBlock.children[0]
                 let x_value_block = parentBlock.children[1]
                 let y_value_block = parentBlock.children[2]
-                let header_uuid = headerBlock.uuid
-                let x_uuid = x_value_block.uuid
-                let y_uuid = y_value_block.uuid
+                let header_uuid = headerBlock["uuid"]
+                console.log("Hellobkdjs")
+                console.log(headerBlock["uuid"])
+                let x_uuid = x_value_block["uuid"]
+                let y_uuid = y_value_block["uuid"]
                 //defining time filters    
                 let date = Math.round((new Date()). getTime() / 1000);
                 let adjustedDate = date - range*86400  
-                console.log(adjustedDate)
                 let cutoff = timeConverter(adjustedDate)
 
                 if(result0 && result0.length > 0) { //Ensuring that the results of the datascript query isn't empty
@@ -236,7 +216,6 @@ return startDate
                             console.log(err)
                         }
                     }
-                    console.log([results][0][0])
                     results.sort((a, b) => {
                         return [a][0]["journal-day"] - [b][0]["journal-day"];
                     });
