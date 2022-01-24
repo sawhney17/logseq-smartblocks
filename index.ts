@@ -37,7 +37,35 @@ async function main () {
         : '')
     );
   };
-  
+  function parseConditional(condition:string, value){
+    switch (condition){
+        case "dayofweek":
+        if(new Date().getDay() == value){
+            return ""
+        }
+        else{
+            return "Error"
+        }
+        break;
+        case "dayofmonth":
+        if(new Date().getDate() == value){
+            return ""
+        }
+        else{
+            return "Error"
+        }
+        case "month":
+        if(new Date().getMonth() == value){
+            return ""
+        }
+        else{
+            return "Error"
+        }
+        break;
+        default:
+        return "Error"
+    }
+}
   const getDateForPage = (d: Date, preferredDateFormat: string) => {
     const getYear = d.getFullYear();
     const getMonth = d.toString().substring(4, 7);
@@ -67,22 +95,31 @@ async function main () {
     }
   };
   async function parseDynamically(blockContent){
-  // Implement date parsing
+    let ifParsing = /(i+f)/
+    if(blockContent.match(ifParsing)){
+    console.log("parse")
+    let parsedInput = blockContent.slice(2, -2); 
+    let spaceParsedInput = parsedInput.replace(/\s+/g, '');
+    let input2 = spaceParsedInput.split("if")
+    console.log(input2)
+    let input3 = input2[1].split("=")
+    console.log(parseConditional(input3[0], input3[1]))
+    return parseConditional(input3[0], input3[1])
+    }
+  // Implement time parsing
   if (blockContent.toLowerCase() == "<%currentTime%>" || blockContent.toLowerCase() =="<%time%>" || blockContent.toLowerCase() == "<%current time%>"){
         let currentTime = new Date()
-        console.log("FRee tiem")
         let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
         return(formattedTime)
   }
+  // Implement if parsing
   const parsedBlock = await Sherlock.parse(blockContent);
   // Destructure
   const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
   if (startDate == null){
     return blockContent
   }
-   console.log(getDateForPage(startDate, preferredDateFormat2))
   return(getDateForPage(startDate, preferredDateFormat2))
-return startDate
 
   }
     logseq.provideModel({
@@ -109,6 +146,7 @@ return startDate
                       logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
                     } else {
                       const childBlocksArr = origBlock.children as unknown as IBatchBlock
+                      const missingKeys = [[]]
                       for (const constant2 in childBlocksArr){ //First child block
                         for (const constant3 in childBlocksArr[constant2]["children"]){ //Second child block
                           for (const constant4 in childBlocksArr[constant2]["children"][constant3]["children"]){ // parsing third child blcok 
@@ -118,19 +156,31 @@ return startDate
                               let toBeParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
                               var currentMatch = regexMatched[x]
                               let formattedMatch = await parseDynamically(currentMatch);
+                              
+                              if (formattedMatch != "Error"){
                               let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
                               let toBeChanged = newRegexString
-                              childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"] = toBeChanged
-                            }  }
+                              childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"] = toBeChanged}
+                              
+                              else{
+                                missingKeys.push([constant2, constant3, constant4])
+                              }
+                            } 
+                           }
                           let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["content"]
                           let regexMatched = initiallyParsed.match(reg)
                           for (const x in regexMatched){
                             let toBeParsed = childBlocksArr[constant2]["children"][constant3]["content"]
                             var currentMatch = regexMatched[x]
                             let formattedMatch = await parseDynamically(currentMatch);
+                            if (formattedMatch != "Error"){
                             let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
                             let toBeChanged = newRegexString
-                            childBlocksArr[constant2]["children"][constant3]["content"] = toBeChanged
+                            childBlocksArr[constant2]["children"][constant3]["content"] = toBeChanged}
+                            else{
+                              missingKeys.push([constant2, constant3])
+                            }
+                          
                           }
                             
                         }
@@ -139,12 +189,64 @@ return startDate
                             for (const x in regexMatched){
                               let toBeParsed = childBlocksArr[constant2]["content"]
                               var currentMatch = regexMatched[x]
+
                               let formattedMatch = await parseDynamically(currentMatch);
+                              if (formattedMatch != "Error"){
                               let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
                               let toBeChanged = newRegexString
-                              childBlocksArr[constant2]["content"] = toBeChanged
+                              childBlocksArr[constant2]["content"] = toBeChanged}
+                              else{
+                                missingKeys.push([constant2])
+                              }
                             }
                     }
+                    console.log(missingKeys)
+                    console.log(childBlocksArr)
+                    //converting missingKeys to splice
+                      missingKeys.reverse() //Changing the order so that it goes bottom blocks to top to avoid reading blocks that don't exist
+                      var reversedKeys = missingKeys.reverse()
+                      console.log(reversedKeys)
+                      console.log(missingKeys)
+                  for (const key in missingKeys){
+                    // console.log(missingKeys[key]["length"])
+                      // console.log(key)
+                    switch (missingKeys[key]["length"]){
+                      case 3: 
+                      // console.log("3")
+                      var constant2 = missingKeys[key][0]
+                      var constant3 = missingKeys[key][1]
+                      var constant4 = missingKeys[key][2]
+                      console.log(missingKeys)
+                      childBlocksArr[constant2]["children"][constant3]["children"].splice(constant4,1)
+                      break;
+                      case 2: 
+                      // console.log("2")
+                      var constant2 = missingKeys[key][0]
+                      var constant3 = missingKeys[key][1]
+                      childBlocksArr[constant2]["children"].splice(constant3,1)    
+                      break;
+                      case 1: 
+                      // console.log("1")
+                      var constant2 = missingKeys[key][0]
+                      console.log(childBlocksArr[constant2])
+                      childBlocksArr[constant2] = null
+                      break;
+                      case 0: 
+                      console.log("0")
+                      break;
+                      default:
+                      console.log(`error: keylength is ${missingKeys[key]["length"]}`);
+                    }
+                  }
+                  // childBlocksArr[0]["children"][0]["children"].splice(1,1)
+                  // childBlocksArr[0]["children"][2]["children"].splice(2,1)
+                  // childBlocksArr[0]["children"].splice(2,1)    
+                  // childBlocksArr[0] = null
+                      
+                      
+                      
+
+
                       await logseq.Editor.insertBatchBlock(blockUuid, childBlocksArr, {
                         before: false,
                         sibling: false,
@@ -182,8 +284,6 @@ return startDate
                 let x_value_block = parentBlock.children[1]
                 let y_value_block = parentBlock.children[2]
                 let header_uuid = headerBlock["uuid"]
-                console.log("Hellobkdjs")
-                console.log(headerBlock["uuid"])
                 let x_uuid = x_value_block["uuid"]
                 let y_uuid = y_value_block["uuid"]
                 //defining time filters    
@@ -286,7 +386,7 @@ return startDate
         if (dateRange == undefined && type==":property_visualizer"){
           dateRange = "10000"
         }
-
+// logseq.Editor.removeBlock
         
         if (type ==':templater'){
         logseq.provideUI({
