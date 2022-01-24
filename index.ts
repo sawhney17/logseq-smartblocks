@@ -43,10 +43,12 @@ async function main () {
         if(new Date().getDay() == value){
             return ""
         }
+        else if (new Date().getDay() == 0 && value == 7){
+            return ""
+        }
         else{
             return "Error"
         }
-        break;
         case "dayofmonth":
         if(new Date().getDate() == value){
             return ""
@@ -61,7 +63,13 @@ async function main () {
         else{
             return "Error"
         }
-        break;
+        case "dayofyear":
+        if(new Date().getDate() == value){
+            return ""
+        }
+        else{
+            return "Error"
+        }
         default:
         return "Error"
     }
