@@ -97,13 +97,10 @@ async function main () {
   async function parseDynamically(blockContent){
     let ifParsing = /(i+f)/
     if(blockContent.match(ifParsing)){
-    console.log("parse")
     let parsedInput = blockContent.slice(2, -2); 
     let spaceParsedInput = parsedInput.replace(/\s+/g, '');
     let input2 = spaceParsedInput.split("if")
-    console.log(input2)
     let input3 = input2[1].split("=")
-    console.log(parseConditional(input3[0], input3[1]))
     return parseConditional(input3[0], input3[1])
     }
   // Implement time parsing
@@ -200,13 +197,7 @@ async function main () {
                               }
                             }
                     }
-                    console.log(missingKeys)
-                    console.log(childBlocksArr)
-                    //converting missingKeys to splice
-                      missingKeys.reverse() //Changing the order so that it goes bottom blocks to top to avoid reading blocks that don't exist
-                      var reversedKeys = missingKeys.reverse()
-                      console.log(reversedKeys)
-                      console.log(missingKeys)
+
                   for (const key in missingKeys){
                     // console.log(missingKeys[key]["length"])
                       // console.log(key)
@@ -216,7 +207,6 @@ async function main () {
                       var constant2 = missingKeys[key][0]
                       var constant3 = missingKeys[key][1]
                       var constant4 = missingKeys[key][2]
-                      console.log(missingKeys)
                       childBlocksArr[constant2]["children"][constant3]["children"].splice(constant4,1)
                       break;
                       case 2: 
@@ -228,11 +218,9 @@ async function main () {
                       case 1: 
                       // console.log("1")
                       var constant2 = missingKeys[key][0]
-                      console.log(childBlocksArr[constant2])
                       childBlocksArr[constant2] = null
                       break;
                       case 0: 
-                      console.log("0")
                       break;
                       default:
                       console.log(`error: keylength is ${missingKeys[key]["length"]}`);
