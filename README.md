@@ -24,7 +24,7 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 	2. Set title(required)
 	3. Set sibling true or false(required)
 - Basic structure of the plugin is as such 
-	- `renderer`
+	- `{{renderer :smartblock, journalTemplate, New Journal, false}}`
 ### Using NLP
 1. In the templates, wherever you want a dynamic date, one that shows a different value based on the date it was inserted, use this syntax `<%NLP Input%>`
 	- `<%Today%>`
