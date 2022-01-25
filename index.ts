@@ -9,7 +9,9 @@ import Sherlock from 'sherlockjs';
 * main entry
 */
 
-
+function routeParsing(){
+  
+}
 
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
@@ -219,15 +221,6 @@ async function main () {
                       console.log(`error: keylength is ${missingKeys[key]["length"]}`);
                     }
                   }
-                  // childBlocksArr[0]["children"][0]["children"].splice(1,1)
-                  // childBlocksArr[0]["children"][2]["children"].splice(2,1)
-                  // childBlocksArr[0]["children"].splice(2,1)    
-                  // childBlocksArr[0] = null
-                      
-                      
-                      
-
-
                       await logseq.Editor.insertBatchBlock(blockUuid, childBlocksArr, {
                         before: false,
                         sibling: false,
@@ -277,8 +270,6 @@ async function main () {
         if (title == undefined){
           title = "New Template"
         }
-
-// logseq.Editor.removeBlock
         
         if (type ==':templater'){
         logseq.provideUI({
