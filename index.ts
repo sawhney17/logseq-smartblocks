@@ -147,7 +147,7 @@ async function main () {
   }
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
-            const { blockUuid, template } = e.dataset
+            const { blockUuid, template, sibling } = e.dataset
             let reg = /<%([^%].*?)%>/g
             var query = `
             [:find (pull ?b [*])
@@ -254,7 +254,8 @@ async function main () {
                   }
                       await logseq.Editor.insertBatchBlock(blockUuid, childBlocksArr, {
                         before: false,
-                        sibling: false,
+                        sibling: (sibling.toLowerCase() === 'true')
+                        ,
                       });
                   }
 
@@ -287,28 +288,35 @@ async function main () {
     // let templaterBlock;
 
     logseq.Editor.registerSlashCommand('Create Templater Block', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, , }} `);
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, , }} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
       
       logseq.Editor.registerSlashCommand('Create Templater Block (guided)', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, template name, button title}} `);
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, template name, button title, sibling?}} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
 
       logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
-        var [type, template, title] = payload.arguments;
+        var [type, template, title, sibling] = payload.arguments;
         if (title == undefined){
           title = "New Template"
         }
-        
-        if (type ==':templater'){
+        let realSiblings;
+        if (sibling == "true"){
+           realSiblings = true
+        }
+        else{
+           realSiblings = false
+        }
+
+        if (type ==':smartblock'){
         logseq.provideUI({
-            key: 'logseq templater plugin',
+            key: 'SmartBlocks for Logseq',
             reset: true,
             slot,
             template: `
-            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-template="${template}" data-title="${title}"
+            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling = ${realSiblings} data-template="${template}" data-title="${title}"
             data-on-click="insertTemplatedBlock">${title}</button>
            `,
           });
