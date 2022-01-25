@@ -9,9 +9,6 @@ import Sherlock from 'sherlockjs';
 * main entry
 */
 
-function routeParsing(){
-  
-}
 
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
@@ -24,6 +21,31 @@ async function main () {
         : '')
     );
   };
+  async function parseRandomly(pageName:string){
+    console.log(pageName)
+    pageName.toLowerCase()
+    let query = `[:find (pull ?b [*])
+    :where
+    [?b :block/path-refs [:block/name "${pageName.toLowerCase()}"]]]`
+    
+    // `[:find (pull ?b [*])
+    // :where
+    // [?b :block/path-refs ?p][?p :block/name "${pageName.toLowerCase()}"]]`
+    
+    // `[:find (pull ?b [*])
+    // :where
+    // [?p :block/name "${pageName.toLowerCase()}"]
+    // [?b :block/ref-pages ?p]]`
+    console.log(query)
+    let results = await logseq.DB.datascriptQuery(query)
+    console.log(results)
+    let flattenedResults = results.map((mappedQuery) => ({
+      uuid: mappedQuery[0].uuid['$uuid$'],
+    }))
+    let index = Math.floor(Math.random()*flattenedResults.length)
+    // console.log(flattenedResults[Math.floor(Math.random()*flattenedResults.length)].uuid)
+    return `((${flattenedResults[index].uuid}))`
+  }
   function parseConditional(condition:string, value){
     switch (condition){
         case "dayofweek":
@@ -90,13 +112,26 @@ async function main () {
     }
   };
   async function parseDynamically(blockContent){
+    console.log(blockContent)
     let ifParsing = /(i+f)/
+    let randomParsing = /randomblock/
     if(blockContent.match(ifParsing)){
     let parsedInput = blockContent.slice(2, -2); 
     let spaceParsedInput = parsedInput.replace(/\s+/g, '');
     let input2 = spaceParsedInput.split("if")
     let input3 = input2[1].split("=")
     return parseConditional(input3[0], input3[1])
+    }
+    if(blockContent.match(randomParsing)){
+      let parsedInput = blockContent.slice(2, -2);
+      // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
+      console.log(`Hi ${parsedInput}`)
+      let input2 = parsedInput.split("randomblock")
+      console.log(input2)
+      console.log(input2[1])
+      let input3 = input2[1].replace(" ", '');
+      console.log(input3) //Returns  "Task Inbox"
+      return await parseRandomly(input3)
     }
   // Implement time parsing
   if (blockContent.toLowerCase() == "<%currentTime%>" || blockContent.toLowerCase() =="<%time%>" || blockContent.toLowerCase() == "<%current time%>"){
@@ -253,16 +288,16 @@ async function main () {
     }
   `)
 
-    let templaterBlock;
+    // let templaterBlock;
 
     logseq.Editor.registerSlashCommand('Create Templater Block', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, , }} `);
-        templaterBlock = await logseq.Editor.getCurrentBlock();
+        // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
       
       logseq.Editor.registerSlashCommand('Create Templater Block (guided)', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, template name, button title}} `);
-        templaterBlock = await logseq.Editor.getCurrentBlock();
+        // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
 
       logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
