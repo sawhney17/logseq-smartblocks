@@ -1,4 +1,4 @@
-# logseq-sm-plugin
+# SmartBlocks for Logseq
 
 This plugin allows you to create a templater button, which on click, inserts the contents of the template you've specified, under the block. 
 
@@ -50,3 +50,4 @@ Has been shifted to it's own plugin: https://github.com/sawhney17/logseq-propert
 # Credits 
 - [Sherlockjs](https://github.com/neilgupta/Sherlock)
 - Thanks a ton to [hkgnp](https://github.com/hkgnp)and his [NLP plugin](https://github.com/hkgnp/logseq-datenlp-plugin) for implementation inspiration
+- Credits to the original Smartblocks
