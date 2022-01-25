@@ -1,3 +1,4 @@
+<a href="https://www.buymeacoffee.com/sawhney17" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-violet.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 # SmartBlocks for Logseq
 
 This plugin allows you to create a templater button, which on click, inserts the contents of the template you've specified, under the block. Allows for advanced features and workflows. 
@@ -46,7 +47,11 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 		- `<%if dayofyear = 100%>`
 	- if it's July
 		- `<%month%> = 7`
-### Using the 
+### Using the Random Function
+- Limited scope at the moment, can currently fetch a random block linking to a page and create a reference to the random block
+- Use `<randomblock Name of page/tag>`
+	-`<randomblock twitter>`
+	-`<randomblock Tasks Inbox>`
 ### Limitations
 - Only works with dynamic variables up to 4 blocks deep 
 
