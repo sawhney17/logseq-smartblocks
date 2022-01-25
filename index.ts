@@ -14,21 +14,6 @@ import Sherlock from 'sherlockjs';
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat2 = userConfigs.preferredDateFormat;
-  const uniqueIdentifier = () =>
-    Math.random()
-      .toString(36)
-      .replace(/[^a-z]+/g, '');
-  function timeConverter(x){
-    var a = new Date(x * 1000);
-    // var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    // var month = months[a.getMonth()];
-    var month = a.getMonth()+1
-    var date = a.getDate();
-    var time = year + month + date;
-    console.log(time)
-    return time;
-  }
   const getOrdinalNum = (n: number) => {
     return (
       n +
@@ -255,79 +240,6 @@ async function main () {
             }
 
           },
-          async insertFormattedBlock (e: any) {
-            const { blockUuid, propertyName, title, displayer, range} = e.dataset
-            var query = `
-            [:find (pull ?b [*])
-            :where
-            [?b :block/properties ?p]
-            [(get ?p :${propertyName})]]
-     `
-     console.log(range)
- 
-            try {
-                let ret = await logseq.DB.datascriptQuery(query)
-                const result0 = ret?.flat()
-                logseq.Editor.insertBlock(blockUuid, title, {sibling:false})
-                
-                logseq.Editor.insertBlock(blockUuid, "Date", {sibling:false})
-                logseq.Editor.insertBlock(blockUuid, propertyName, {sibling:false})
-
-                let parentBlock = await logseq.Editor.getBlock(blockUuid, {includeChildren:true})
-                if (parentBlock?.children) { //Checking to make sure blocks were successfully created
-                //defining constants
-                let headerBlock = parentBlock.children[0]
-                let x_value_block = parentBlock.children[1]
-                let y_value_block = parentBlock.children[2]
-                let header_uuid = headerBlock["uuid"]
-                let x_uuid = x_value_block["uuid"]
-                let y_uuid = y_value_block["uuid"]
-                //defining time filters    
-                let date = Math.round((new Date()). getTime() / 1000);
-                let adjustedDate = date - range*86400  
-                let cutoff = timeConverter(adjustedDate)
-
-                if(result0 && result0.length > 0) { //Ensuring that the results of the datascript query isn't empty
-                    var results = []
-                    for (const constant in result0) {
-                        try {
-                            if ([result0[constant]][0]["journal?"]){
-                                if (![result0[constant]][0]["page"]!= undefined){
-                                  if([result0[constant]][0]["journal-day"] > cutoff){
-                                    console.log("success")
-                                    results.push([result0[constant]][0])
-                                  }
-                                }
-                            }
-                        }
-                        catch(err){
-                            console.log(err)
-                        }
-                    }
-                    results.sort((a, b) => {
-                        return [a][0]["journal-day"] - [b][0]["journal-day"];
-                    });
-                    for (const constant in results) {
-
-                        if ([results[constant]][0]["original-name"] !== undefined){
-                        logseq.Editor.insertBlock(x_uuid,[results[constant]][0]["original-name"], {sibling:false});
-                        logseq.Editor.insertBlock(y_uuid,String([results[constant]][0]["properties"][propertyName]),{sibling: false});
-                        }
-                    }
-
-                  }
-                  console.log("Hello")
-                  logseq.Editor.updateBlock(blockUuid, `{{renderer :${displayer}s_${uniqueIdentifier()}}}`);
-                  logseq.Editor.moveBlock(y_uuid, header_uuid,{children:true});
-                  logseq.Editor.moveBlock(x_uuid, header_uuid,{children:true});
-                }
-                  
-                }
-             catch (err) {
-                console.log(err)
-              }
-            
-          },
     }),
     logseq.provideStyle(`
     .templater-btn {
@@ -355,33 +267,17 @@ async function main () {
         templaterBlock = await logseq.Editor.getCurrentBlock();
       });
       
-      logseq.Editor.registerSlashCommand('Property Visualizer', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, }}`);
-      });
       logseq.Editor.registerSlashCommand('Create Templater Block (guided)', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :templater, template name, button title}} `);
         templaterBlock = await logseq.Editor.getCurrentBlock();
       });
-      
-      logseq.Editor.registerSlashCommand('Property Visualizer (guided)', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :property_visualizer, property name, chart/table styling(eg. data nosum, area white 500), chart/table, date range}}`);
-      });
 
       logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
-        var [type, template, title, displayStyle, dateRange] = payload.arguments;
-        if (title == undefined && type==":templater"){
+        var [type, template, title] = payload.arguments;
+        if (title == undefined){
           title = "New Template"
         }
-        if (title == undefined && type==":property_visualizer"){
-          title = "data"
-        }
 
-        if (displayStyle == undefined && type==":property_visualizer"){
-          displayStyle = "table"
-        }
-        if (dateRange == undefined && type==":property_visualizer"){
-          dateRange = "10000"
-        }
 // logseq.Editor.removeBlock
         
         if (type ==':templater'){
@@ -395,19 +291,6 @@ async function main () {
            `,
           });
         }
-
-          if (type == ':property_visualizer'){
-          logseq.provideUI({
-              key: 'logseq visualizer plugin',
-              reset: true,
-              slot,
-              template: `
-              <button class="templater-btn" data-block-uuid="${payload.uuid}" data-property-name="${template}" data-title="${title}" data-displayer="${displayStyle}" data-range="${dateRange}"
-              data-on-click="insertFormattedBlock">Visualize ${template} as ${displayStyle}</button>
-             `,
-            });
-          }
-          else return;
       });
 }
 
