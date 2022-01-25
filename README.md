@@ -2,6 +2,7 @@
 
 This plugin allows you to create a templater button, which on click, inserts the contents of the template you've specified, under the block. 
 
+
 # Features
 
 ## Template Inserter
@@ -14,6 +15,13 @@ This plugin allows you to create a templater button, which on click, inserts the
 
 ### Usage in action
 ![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662222-79f0fa35-c2d8-4070-93d9-a39b0b7b4982.gif)
+### Flags
+- You can configure the templater in the following ways
+	1. Set template(required)
+	2. Set title(required)
+	3. Set sibling true or false(required)
+- Basic structure of the plugin is as such 
+	- `renderer`
 ### Using NLP
 1. In the templates, wherever you want a dynamic date, one that shows a different value based on the date it was inserted, use this syntax `<%NLP Input%>`
 	- `<%Today%>`
