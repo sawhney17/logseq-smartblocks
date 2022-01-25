@@ -125,12 +125,8 @@ async function main () {
     if(blockContent.match(randomParsing)){
       let parsedInput = blockContent.slice(2, -2);
       // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
-      console.log(`Hi ${parsedInput}`)
       let input2 = parsedInput.split("randomblock")
-      console.log(input2)
-      console.log(input2[1])
       let input3 = input2[1].replace(" ", '');
-      console.log(input3) //Returns  "Task Inbox"
       return await parseRandomly(input3)
     }
   // Implement time parsing
