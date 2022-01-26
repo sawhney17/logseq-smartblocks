@@ -22,7 +22,6 @@ async function main () {
     );
   };
   async function parseRandomly(pageName:string){
-    console.log(pageName)
     pageName.toLowerCase()
     let query = `[:find (pull ?b [*])
     :where
@@ -109,7 +108,6 @@ async function main () {
     }
   };
   async function parseDynamically(blockContent){
-    console.log(blockContent)
     let ifParsing = /(i+f)/
     let randomParsing = /randomblock/
     if(blockContent.match(ifParsing)){
