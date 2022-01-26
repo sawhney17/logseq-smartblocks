@@ -36,14 +36,11 @@ async function main () {
     // :where
     // [?p :block/name "${pageName.toLowerCase()}"]
     // [?b :block/ref-pages ?p]]`
-    console.log(query)
     let results = await logseq.DB.datascriptQuery(query)
-    console.log(results)
     let flattenedResults = results.map((mappedQuery) => ({
       uuid: mappedQuery[0].uuid['$uuid$'],
     }))
     let index = Math.floor(Math.random()*flattenedResults.length)
-    // console.log(flattenedResults[Math.floor(Math.random()*flattenedResults.length)].uuid)
     return `((${flattenedResults[index].uuid}))`
   }
   function parseConditional(condition:string, value){
@@ -229,24 +226,19 @@ async function main () {
                     }
 
                   for (const key in missingKeys){
-                    // console.log(missingKeys[key]["length"])
-                      // console.log(key)
                     switch (missingKeys[key]["length"]){
                       case 3: 
-                      // console.log("3")
                       var constant2 = missingKeys[key][0]
                       var constant3 = missingKeys[key][1]
                       var constant4 = missingKeys[key][2]
                       childBlocksArr[constant2]["children"][constant3]["children"].splice(constant4,1)
                       break;
                       case 2: 
-                      // console.log("2")
                       var constant2 = missingKeys[key][0]
                       var constant3 = missingKeys[key][1]
                       childBlocksArr[constant2]["children"].splice(constant3,1)    
                       break;
                       case 1: 
-                      // console.log("1")
                       var constant2 = missingKeys[key][0]
                       childBlocksArr[constant2] = null
                       break;
