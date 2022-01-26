@@ -132,7 +132,11 @@ async function main () {
   // Implement time parsing
   if (blockContent.toLowerCase() == "<%currentTime%>" || blockContent.toLowerCase() =="<%time%>" || blockContent.toLowerCase() == "<%current time%>"){
         let currentTime = new Date()
-        let formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes()
+        let formattedTime
+        if (currentTime.getMinutes() <10){
+          formattedTime = currentTime.getHours() + ":" + "0"+(currentTime.getMinutes())
+        }
+        else{formattedTime = currentTime.getHours() + ":" + (currentTime.getMinutes())}
         return(formattedTime)
   }
   // Implement if parsing
