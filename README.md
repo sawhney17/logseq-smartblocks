@@ -33,6 +33,7 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 	1. Set template(required)
 	2. Set title(required for button)
 	3. Set sibling true or false(required for button)
+		- Whether you want the template to be inserted as a sibling(as a new bullet _not_ a child of the button), or as a child (indented under the button)
 - Basic structure of the button expansion is as such 
 	- `{{renderer :smartblock, journalTemplate, New Journal, false}}`
 ### Using NLP
