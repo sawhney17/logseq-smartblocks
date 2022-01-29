@@ -15,14 +15,6 @@ import {getDateForPage } from 'logseq-dateutils';
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat2 = userConfigs.preferredDateFormat;
-  const getOrdinalNum = (n: number) => {
-    return (
-      n +
-      (n > 0
-        ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
-        : '')
-    );
-  };
   async function parseRandomly(pageName:string){
     pageName.toLowerCase()
     let query = `[:find (pull ?b [*])
