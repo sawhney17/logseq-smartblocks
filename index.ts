@@ -144,121 +144,125 @@ async function main () {
   return(getDateForPage(startDate, preferredDateFormat2))
 
   }
+  async function insertProperlyTemplatedBlock (blockUuid, template, sibling) {
+    let reg = /<%([^%].*?)%>/g
+    var query = `
+    [:find (pull ?b [*])
+   :where
+   [?b :block/properties ?p]
+   [(get ?p :template) ?ty]
+   [(= "${template}" ?ty)]]`
+
+    let refUUID
+    try {
+      let ret = await logseq.DB.datascriptQuery(query)
+      const results = ret?.flat()
+      if(results && results.length > 0) {
+        refUUID = results[0].uuid.$uuid$
+        const origBlock = await logseq.Editor.getBlock(refUUID, {
+          includeChildren: true,
+        });
+        if (origBlock.children.length === 0 || !origBlock.children) {
+              logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
+            } else {
+              const childBlocksArr = origBlock.children as unknown as IBatchBlock
+              const missingKeys = [[]]
+              for (const constant2 in childBlocksArr){ //First child block
+                for (const constant3 in childBlocksArr[constant2]["children"]){ //Second child block
+                  for (const constant4 in childBlocksArr[constant2]["children"][constant3]["children"]){ // parsing third child blcok 
+                    let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
+                    let regexMatched = initiallyParsed.match(reg)
+                    for (const x in regexMatched){
+                      let toBeParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
+                      var currentMatch = regexMatched[x]
+                      let formattedMatch = await parseDynamically(currentMatch);
+                      
+                      if (formattedMatch != "Error"){
+                      let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+                      let toBeChanged = newRegexString
+                      childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"] = toBeChanged}
+                      
+                      else{
+                        missingKeys.push([constant2, constant3, constant4])
+                      }
+                    } 
+                   }
+                  let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["content"]
+                  let regexMatched = initiallyParsed.match(reg)
+                  for (const x in regexMatched){
+                    let toBeParsed = childBlocksArr[constant2]["children"][constant3]["content"]
+                    var currentMatch = regexMatched[x]
+                    let formattedMatch = await parseDynamically(currentMatch);
+                    if (formattedMatch != "Error"){
+                    let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+                    let toBeChanged = newRegexString
+                    childBlocksArr[constant2]["children"][constant3]["content"] = toBeChanged}
+                    else{
+                      missingKeys.push([constant2, constant3])
+                    }
+                  
+                  }
+                    
+                }
+                    let initiallyParsed = childBlocksArr[constant2]["content"]
+                    let regexMatched = initiallyParsed.match(reg)
+                    for (const x in regexMatched){
+                      let toBeParsed = childBlocksArr[constant2]["content"]
+                      var currentMatch = regexMatched[x]
+
+                      let formattedMatch = await parseDynamically(currentMatch);
+                      if (formattedMatch != "Error"){
+                      let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+                      let toBeChanged = newRegexString
+                      childBlocksArr[constant2]["content"] = toBeChanged}
+                      else{
+                        missingKeys.push([constant2])
+                      }
+                    }
+            }
+
+          for (const key in missingKeys){
+            switch (missingKeys[key]["length"]){
+              case 3: 
+              var constant2 = missingKeys[key][0]
+              var constant3 = missingKeys[key][1]
+              var constant4 = missingKeys[key][2]
+              childBlocksArr[constant2]["children"][constant3]["children"].splice(constant4,1)
+              break;
+              case 2: 
+              var constant2 = missingKeys[key][0]
+              var constant3 = missingKeys[key][1]
+              childBlocksArr[constant2]["children"].splice(constant3,1)    
+              break;
+              case 1: 
+              var constant2 = missingKeys[key][0]
+              childBlocksArr[constant2] = null
+              break;
+              case 0: 
+              break;
+              default:
+              console.log(`error: keylength is ${missingKeys[key]["length"]}`);
+            }
+          }
+              await logseq.Editor.insertBatchBlock(blockUuid, childBlocksArr, {
+                before: false,
+                sibling: (sibling.toLowerCase() === 'true')
+                ,
+              });
+          }
+
+    }
+  } catch (err) {
+      console.log(err)
+    }
+
+  }
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
-            const { blockUuid, template, sibling } = e.dataset
-            let reg = /<%([^%].*?)%>/g
-            var query = `
-            [:find (pull ?b [*])
-           :where
-           [?b :block/properties ?p]
-           [(get ?p :template) ?ty]
-           [(= "${template}" ?ty)]]`
-
-            let refUUID
-            try {
-              let ret = await logseq.DB.datascriptQuery(query)
-              const results = ret?.flat()
-              if(results && results.length > 0) {
-                refUUID = results[0].uuid.$uuid$
-                const origBlock = await logseq.Editor.getBlock(refUUID, {
-                  includeChildren: true,
-                });
-                if (origBlock.children.length === 0 || !origBlock.children) {
-                      logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
-                    } else {
-                      const childBlocksArr = origBlock.children as unknown as IBatchBlock
-                      const missingKeys = [[]]
-                      for (const constant2 in childBlocksArr){ //First child block
-                        for (const constant3 in childBlocksArr[constant2]["children"]){ //Second child block
-                          for (const constant4 in childBlocksArr[constant2]["children"][constant3]["children"]){ // parsing third child blcok 
-                            let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
-                            let regexMatched = initiallyParsed.match(reg)
-                            for (const x in regexMatched){
-                              let toBeParsed = childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"]
-                              var currentMatch = regexMatched[x]
-                              let formattedMatch = await parseDynamically(currentMatch);
-                              
-                              if (formattedMatch != "Error"){
-                              let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
-                              let toBeChanged = newRegexString
-                              childBlocksArr[constant2]["children"][constant3]["children"][constant4]["content"] = toBeChanged}
-                              
-                              else{
-                                missingKeys.push([constant2, constant3, constant4])
-                              }
-                            } 
-                           }
-                          let initiallyParsed = childBlocksArr[constant2]["children"][constant3]["content"]
-                          let regexMatched = initiallyParsed.match(reg)
-                          for (const x in regexMatched){
-                            let toBeParsed = childBlocksArr[constant2]["children"][constant3]["content"]
-                            var currentMatch = regexMatched[x]
-                            let formattedMatch = await parseDynamically(currentMatch);
-                            if (formattedMatch != "Error"){
-                            let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
-                            let toBeChanged = newRegexString
-                            childBlocksArr[constant2]["children"][constant3]["content"] = toBeChanged}
-                            else{
-                              missingKeys.push([constant2, constant3])
-                            }
-                          
-                          }
-                            
-                        }
-                            let initiallyParsed = childBlocksArr[constant2]["content"]
-                            let regexMatched = initiallyParsed.match(reg)
-                            for (const x in regexMatched){
-                              let toBeParsed = childBlocksArr[constant2]["content"]
-                              var currentMatch = regexMatched[x]
-
-                              let formattedMatch = await parseDynamically(currentMatch);
-                              if (formattedMatch != "Error"){
-                              let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
-                              let toBeChanged = newRegexString
-                              childBlocksArr[constant2]["content"] = toBeChanged}
-                              else{
-                                missingKeys.push([constant2])
-                              }
-                            }
-                    }
-
-                  for (const key in missingKeys){
-                    switch (missingKeys[key]["length"]){
-                      case 3: 
-                      var constant2 = missingKeys[key][0]
-                      var constant3 = missingKeys[key][1]
-                      var constant4 = missingKeys[key][2]
-                      childBlocksArr[constant2]["children"][constant3]["children"].splice(constant4,1)
-                      break;
-                      case 2: 
-                      var constant2 = missingKeys[key][0]
-                      var constant3 = missingKeys[key][1]
-                      childBlocksArr[constant2]["children"].splice(constant3,1)    
-                      break;
-                      case 1: 
-                      var constant2 = missingKeys[key][0]
-                      childBlocksArr[constant2] = null
-                      break;
-                      case 0: 
-                      break;
-                      default:
-                      console.log(`error: keylength is ${missingKeys[key]["length"]}`);
-                    }
-                  }
-                      await logseq.Editor.insertBatchBlock(blockUuid, childBlocksArr, {
-                        before: false,
-                        sibling: (sibling.toLowerCase() === 'true')
-                        ,
-                      });
-                  }
-
-            }
-          } catch (err) {
-              console.log(err)
-            }
-
-          },
+          const { blockUuid, template, sibling } = e.dataset
+            insertProperlyTemplatedBlock(blockUuid, template, sibling)
+            
+        }
     }),
     logseq.provideStyle(`
     .templater-btn {
@@ -281,11 +285,19 @@ async function main () {
 
     // let templaterBlock;
 
-    logseq.Editor.registerSlashCommand('Create Templater Block', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, , }} `);
+      logseq.Editor.registerSlashCommand('Create Templater Block', async () => {
+          await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, , }} `);
+          // templaterBlock = await logseq.Editor.getCurrentBlock();
+        });
+      logseq.Editor.registerSlashCommand('Create Inline Templater Block', async () => {
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblockInline, }} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
-      
+      logseq.Editor.registerSlashCommand('Create Inline Templater Block(guided)', async () => {
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblockInline, template name}} `);
+        // templaterBlock = await logseq.Editor.getCurrentBlock();
+      });
+        
       logseq.Editor.registerSlashCommand('Create Templater Block (guided)', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, template name, button title, sibling?}} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
@@ -315,6 +327,10 @@ async function main () {
            `,
           });
         }
+        if (type ==':smartblockInline'){
+          await insertProperlyTemplatedBlock(payload.uuid, template, "true")
+          logseq.Editor.removeBlock(payload.uuid)
+          }
       });
 }
 
