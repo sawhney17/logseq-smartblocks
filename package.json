@@ -1,6 +1,6 @@
 {
   "name": "logseq-smartblocks-plugin",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A plugin to replicate Smartblocks",
   "author": "@sawhney17",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "parcel": "^2.0.0"
   },
   "dependencies": {
+    "logseq-dateutils": "^0.0.10",
     "sherlockjs": "^1.4.2"
   },
   "logseq": {
