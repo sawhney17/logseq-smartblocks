@@ -13,8 +13,6 @@ import {getDateForPage } from 'logseq-dateutils';
 
 
 async function main () {
-  const userConfigs = await logseq.App.getUserConfigs();
-  const preferredDateFormat2 = userConfigs.preferredDateFormat;
   async function parseRandomly(pageName:string){
     pageName.toLowerCase()
     let query = `[:find (pull ?b [*])
@@ -73,35 +71,9 @@ async function main () {
         return "Error"
     }
 }
-  // const getDateForPage = (d: Date, preferredDateFormat: string) => {
-  //   const getYear = d.getFullYear();
-  //   const getMonth = d.toString().substring(4, 7);
-  //   const getMonthNumber = d.getMonth() + 1;
-  //   const getDate = d.getDate();
-  
-  //   if (preferredDateFormat === 'MMM do yyyy') {
-  //     return `[[${getMonth} ${getOrdinalNum(getDate)}, ${getYear}]]`;
-  //   } else if (
-  //     preferredDateFormat.includes('yyyy') &&
-  //     preferredDateFormat.includes('MM') &&
-  //     preferredDateFormat.includes('dd') &&
-  //     ('-' || '_' || '/')
-  //   ) {
-  //     var mapObj = {
-  //       yyyy: getYear,
-  //       dd: ('0' + getDate).slice(-2),
-  //       MM: ('0' + getMonthNumber).slice(-2),
-  //     };
-  //     let dateStr = preferredDateFormat;
-  //     dateStr = dateStr.replace(/yyyy|dd|MM/gi, function (matched) {
-  //       return mapObj[matched];
-  //     });
-  //     return `[[${dateStr}]]`;
-  //   } else {
-  //     return `[[${getMonth} ${getOrdinalNum(getDate)}, ${getYear}]]`;
-  //   }
-  // };
   async function parseDynamically(blockContent){
+    const userConfigs = await logseq.App.getUserConfigs();
+    const preferredDateFormat = userConfigs.preferredDateFormat;
     let ifParsing = /(i+f)/
     let randomParsing = /randomblock/
     if(blockContent.match(ifParsing)){
@@ -135,7 +107,7 @@ async function main () {
   if (startDate == null){
     return blockContent
   }
-  return(getDateForPage(startDate, preferredDateFormat2))
+  return(getDateForPage(startDate, preferredDateFormat))
 
   }
   async function insertProperlyTemplatedBlock (blockUuid, template, sibling) {
