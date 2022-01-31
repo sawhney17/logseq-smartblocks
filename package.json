@@ -10,11 +10,21 @@
   },
   "devDependencies": {
     "@logseq/libs": "^0.0.1-alpha.34",
-    "parcel": "^2.0.0"
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "autoprefixer": "^10.4.2",
+    "parcel": "^2.0.0",
+    "postcss": "^8.1.0"
   },
   "dependencies": {
-    "logseq-dateutils": "^0.0.10",
-    "sherlockjs": "^1.4.2"
+    "autoprefix": "^1.0.1",
+    "logseq-dateutils": "latest",
+    "postcss-cli": "^9.1.0",
+    "postcss-import": "^14.0.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "sherlockjs": "^1.4.2",
+    "tailwindcss": "^3.0.15"
   },
   "logseq": {
     "id": "_km4vf6swk",

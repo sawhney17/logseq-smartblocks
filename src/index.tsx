@@ -1,11 +1,13 @@
 import '@logseq/libs'
 import {
-  BlockEntity,
-  PageEntity,
   IBatchBlock,
 } from '@logseq/libs/dist/LSPlugin.user';
 import Sherlock from 'sherlockjs';
 import {getDateForPage } from 'logseq-dateutils';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { handleClosePopup } from './handleClosePopup';
 
 /**
 * main entry
@@ -19,14 +21,6 @@ async function main () {
     :where
     [?b :block/path-refs [:block/name "${pageName.toLowerCase()}"]]]`
     
-    // `[:find (pull ?b [*])
-    // :where
-    // [?b :block/path-refs ?p][?p :block/name "${pageName.toLowerCase()}"]]`
-    
-    // `[:find (pull ?b [*])
-    // :where
-    // [?p :block/name "${pageName.toLowerCase()}"]
-    // [?b :block/ref-pages ?p]]`
     let results = await logseq.DB.datascriptQuery(query)
     let flattenedResults = results.map((mappedQuery) => ({
       uuid: mappedQuery[0].uuid['$uuid$'],
@@ -230,6 +224,26 @@ async function main () {
             
         }
     }),
+
+    logseq.App.registerCommandPalette(
+      {
+        key: 'logseq-noTODO-plugin',
+        label: "Quick todo to today's journal page",
+        keybinding: {
+          binding: 'm t',
+        },
+      },
+      () => {
+        logseq.showMainUI();
+  
+        document.addEventListener('keydown', (e: any) => {
+          if (e.keyCode !== 27) {
+            (document.querySelector('.task-field') as HTMLElement).focus();
+          }
+        });
+      }
+    );
+
     logseq.provideStyle(`
     .templater-btn {
        border: 1px solid var(--ls-border-color); 
@@ -298,6 +312,14 @@ async function main () {
           logseq.Editor.removeBlock(payload.uuid)
           }
       });
+
+      handleClosePopup()
+      ReactDOM.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>,
+        document.getElementById('app')
+      );
 }
 
 logseq.ready(main).catch(console.error)
