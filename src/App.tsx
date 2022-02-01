@@ -9,7 +9,6 @@ const App = () => {
   const handleForm = (e: any) => {
     setTaskVal(e.target.value);
   };
-
   const handleSubmit = async (e: any) => {
     console.log("submit Clicked")
     if (e.keyCode === 13) {
