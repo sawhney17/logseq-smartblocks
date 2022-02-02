@@ -17,31 +17,32 @@ function parseConditional(condition:string, value){
   switch (condition){
       case "dayofweek":
       if(new Date().getDay() == value){
-          return ""
+          return "Success"
       }
       else if (new Date().getDay() == 0 && value == 7){
-          return ""
+          return "Success"
       }
       else{
+          console.log(value)
           return "Error"
       }
       case "dayofmonth":
       if(new Date().getDate() == value){
-          return ""
+          return "Success"
       }
       else{
           return "Error"
       }
       case "month":
       if(new Date().getMonth() == value){
-          return ""
+          return "Success"
       }
       else{
           return "Error"
       }
       case "dayofyear":
       if(new Date().getDate() == value){
-          return ""
+          return "Success"
       }
       else{
           return "Error"
@@ -56,14 +57,26 @@ export async function parseDynamically(blockContent){
     let ifParsing = /(i+f)/
     let randomParsing = /randomblock/
     if(blockContent.match(ifParsing)){
-    let parsedInput = blockContent.slice(2, -2); 
-    let spaceParsedInput = parsedInput.replace(/\s+/g, '');
-    let input2 = spaceParsedInput.split("if")
-    let input3 = input2[1].split("=")
-    return parseConditional(input3[0], input3[1])
-    }
+      let parsedInput = blockContent.slice(2, -2); 
+      let input = parsedInput.split(":")
+      let spaceParsedInput = input[0].replace(/\s+/g, '');
+      let input1 = spaceParsedInput.split("||")
+      let tempStorageArray = []
+      for (const x in input1){
+      let input2 = input1[x].split("if")
+      let input3 = input2[1].split("=")
+          tempStorageArray.push(parseConditional(input3[0], input3[1]))
+      }
+      if (tempStorageArray.includes("Success")){
+          return(input[1])
+      }
+      else{
+          return("")
+      }
+      }
+
     if(blockContent.match(randomParsing)){
-      let parsedInput = blockContent.slice(2, -2);
+      let parsedInput = blockContent.slice(2, -2); 
       // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
       let input2 = parsedInput.split("randomblock")
       let input3 = input2[1].replace(" ", '');

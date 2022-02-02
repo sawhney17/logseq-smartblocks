@@ -16,13 +16,33 @@ async function triggerParse(obj){
         let toBeParsed = obj.content
         var currentMatch = regexMatched[x]
         let formattedMatch = await parseDynamically(currentMatch);
-        
-        if (formattedMatch != "Error"){
+      //   await parseDynamically(currentMatch).then(function(result){if (result == "Error"){
+      //     console.log("HI")
+      //     delete(obj.children)
+      // }
+      // else{
+      //   console.log("BYE")
         let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
         obj.content = newRegexString
-      }
-     }
+      // }
     }
+    // )
+        
+
+      //   if (formattedMatch != "Error"){
+      //     console.log("BYE")
+      //   let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+      //   obj.content = newRegexString
+      // }
+      // else{
+      //   console.log("HI")
+      //   obj.content = null, 
+      //   obj.children = null,
+      //   obj.uuid = null
+      //   obj.id = null
+      // }
+     }
+    
   await obj.children.map(triggerParse)
 }
 
@@ -43,9 +63,7 @@ blockUuid2 = blockUuid
         const origBlock = await logseq.Editor.getBlock(refUUID, {
           includeChildren: true,
         });
-        const childBlocksArray = origBlock
         data = origBlock
-        var someValue = 0
         function insertFinally (){
           logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, sibling)
         }

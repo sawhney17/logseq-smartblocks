@@ -42,6 +42,7 @@ async function main () {
         });
       }
     );
+    
 
     logseq.provideStyle(`
     .templater-btn {
@@ -61,23 +62,20 @@ async function main () {
         color: #0F9960;
     }
   `)
-
-    // let templaterBlock;
-
-      logseq.Editor.registerSlashCommand('Create Templater Block', async () => {
-          await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, , }} `);
-          // templaterBlock = await logseq.Editor.getCurrentBlock();
-        });
-      logseq.Editor.registerSlashCommand('Create Inline Templater Block', async () => {
+  logseq.Editor.registerSlashCommand('Create SmartBlock', async () => {
+    await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, , }} `);
+    // templaterBlock = await logseq.Editor.getCurrentBlock();
+  });
+      logseq.Editor.registerSlashCommand('Create Inline  SmartBlock', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblockInline, }} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
-      logseq.Editor.registerSlashCommand('Create Inline Templater Block(guided)', async () => {
+      logseq.Editor.registerSlashCommand('Create Inline SmartBlock(guided)', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblockInline, template name}} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
         
-      logseq.Editor.registerSlashCommand('Create Templater Block (guided)', async () => {
+      logseq.Editor.registerSlashCommand('Create SmartBlock (guided)', async () => {
         await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, template name, button title, sibling?}} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
