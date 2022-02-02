@@ -92,7 +92,6 @@ async function main () {
         else{
            realSiblings = false
         }
-
         if (type ==':smartblock'){
         logseq.provideUI({
             key: 'SmartBlocks for Logseq',
@@ -105,8 +104,9 @@ async function main () {
           });
         }
         if (type ==':smartblockInline'){
-          await insertProperlyTemplatedBlock(payload.uuid, template, "true")
-          logseq.Editor.removeBlock(payload.uuid)
+          await insertProperlyTemplatedBlock(payload.uuid, template, true).then(function(result){
+            logseq.Editor.updateBlock(payload.uuid, "")
+            })
           }
       });
 

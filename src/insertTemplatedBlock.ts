@@ -16,31 +16,9 @@ async function triggerParse(obj){
         let toBeParsed = obj.content
         var currentMatch = regexMatched[x]
         let formattedMatch = await parseDynamically(currentMatch);
-      //   await parseDynamically(currentMatch).then(function(result){if (result == "Error"){
-      //     console.log("HI")
-      //     delete(obj.children)
-      // }
-      // else{
-      //   console.log("BYE")
         let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
         obj.content = newRegexString
-      // }
     }
-    // )
-        
-
-      //   if (formattedMatch != "Error"){
-      //     console.log("BYE")
-      //   let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
-      //   obj.content = newRegexString
-      // }
-      // else{
-      //   console.log("HI")
-      //   obj.content = null, 
-      //   obj.children = null,
-      //   obj.uuid = null
-      //   obj.id = null
-      // }
      }
     
   await obj.children.map(triggerParse)
@@ -53,6 +31,7 @@ export async function insertProperlyTemplatedBlock (blockUuid, template, sibling
    [?b :block/properties ?p]
    [(get ?p :template) ?ty]
    [(= "${template}" ?ty)]]`
+   console.log(sibling)
 blockUuid2 = blockUuid
     let refUUID
     try {
@@ -65,7 +44,7 @@ blockUuid2 = blockUuid
         });
         data = origBlock
         function insertFinally (){
-          logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, sibling)
+          logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, {sibling:sibling})
         }
 
           triggerParse(data)
@@ -74,7 +53,6 @@ blockUuid2 = blockUuid
           }, 100);
         if (origBlock.children.length === 0 || !origBlock.children) {
               logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
-            
             }
     }
   } 

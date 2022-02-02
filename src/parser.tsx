@@ -23,7 +23,6 @@ function parseConditional(condition:string, value){
           return "Success"
       }
       else{
-          console.log(value)
           return "Error"
       }
       case "dayofmonth":
