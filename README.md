@@ -60,9 +60,9 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 		- `<%month%> = 7: text to be entered`
 3. As of the latest release, you can now have OR statements to result in insertion if *any* of the properties are in action. Simply separate the parameters with `||`. Some examples are as follows
 	- if it's either january or a monday
-		- <%if month = 100|| if dayofweek = 1||  : text to be entered%>
+		- `<%if month = 100|| if dayofweek = 1||  : text to be entered%>`
 	- if it's a weekend
-		- <%if dayofweek = 6|| if dayofweek = 7||  : text to be entered%>
+		- `<%if dayofweek = 6|| if dayofweek = 7||  : text to be entered%>`
 ### Using the Random Function
 - Limited scope at the moment, can currently fetch a random block linking to a page and create a reference to the random block
 - Use `<randomblock Name of page/tag>`
