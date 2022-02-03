@@ -68,8 +68,13 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 - Use `<randomblock Name of page/tag>`
 	-`<randomblock twitter>`
 	-`<randomblock Tasks Inbox>`
+### Using the current Page functoin
+- If you want to import the current page into the template as a dynamic variable, simply insert the placeholder `<%currentPage%>`
+- Study <%currentPage%> on <%tomorrow%>
+- Will return `Study [[Nuclear Physics]] [[Feb 3, 2022]]`
+
 ### Limitations
-- Only works with dynamic variables up to 4 blocks deep 
+- ~~Only works with dynamic variables up to 4 blocks deep~~ fixed in latest update
 
 ### TODO
 - [x] Enable support for natural language processing for dates allowing for dynamic dates (different date auto added based on current date)
