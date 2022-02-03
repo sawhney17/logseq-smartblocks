@@ -53,6 +53,7 @@ function parseConditional(condition:string, value){
 export async function parseDynamically(blockContent){
     const userConfigs = await logseq.App.getUserConfigs();
     const preferredDateFormat = userConfigs.preferredDateFormat;
+    let currentTime = new Date()
     let ifParsing = /(i+f)/
     let pageBlock = /currentpage/
     let randomParsing = /randomblock/
@@ -76,7 +77,11 @@ export async function parseDynamically(blockContent){
       }
     if(blockContent.toLowerCase().match(pageBlock)){
       let currentp3age = await logseq.Editor.getCurrentPage()
-      return currentp3age.name
+      if (currentp3age != null ){
+      return currentp3age.name}
+      else{
+        return getDateForPage(currentTime, preferredDateFormat)
+      }
     }
     if(blockContent.match(randomParsing)){
       // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
@@ -87,7 +92,7 @@ export async function parseDynamically(blockContent){
 
   // Implement time parsing
   if (blockContent.toLowerCase() == "<%currentTime%>" || blockContent.toLowerCase() =="<%time%>" || blockContent.toLowerCase() == "<%current time%>"){
-    let currentTime = new Date()
+    
     let formattedTime
     if (currentTime.getMinutes() <10){
       formattedTime = currentTime.getHours() + ":" + "0"+(currentTime.getMinutes())
