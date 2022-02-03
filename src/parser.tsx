@@ -54,9 +54,10 @@ export async function parseDynamically(blockContent){
     const userConfigs = await logseq.App.getUserConfigs();
     const preferredDateFormat = userConfigs.preferredDateFormat;
     let ifParsing = /(i+f)/
+    let pageBlock = /currentpage/
     let randomParsing = /randomblock/
+    let parsedInput = blockContent.slice(2, -2); 
     if(blockContent.match(ifParsing)){
-      let parsedInput = blockContent.slice(2, -2); 
       let input = parsedInput.split(":")
       let spaceParsedInput = input[0].replace(/\s+/g, '');
       let input1 = spaceParsedInput.split("||")
@@ -73,9 +74,11 @@ export async function parseDynamically(blockContent){
           return("")
       }
       }
-
+    if(blockContent.toLowerCase().match(pageBlock)){
+      let currentp3age = await logseq.Editor.getCurrentPage()
+      return currentp3age.name
+    }
     if(blockContent.match(randomParsing)){
-      let parsedInput = blockContent.slice(2, -2); 
       // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
       let input2 = parsedInput.split("randomblock")
       let input3 = input2[1].replace(" ", '');
