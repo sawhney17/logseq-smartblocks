@@ -4,6 +4,8 @@ import {
 } from '@logseq/libs/dist/LSPlugin.user';
 
 import {parseDynamically} from './parser';
+
+import { valueArray, currentValueArray, currentValueCount, valueCount } from './index';
 var data = null
 
 var blockUuid2
@@ -24,7 +26,28 @@ async function triggerParse(obj){
   await obj.children.map(triggerParse)
 }
 
-export async function insertProperlyTemplatedBlock (blockUuid, template, sibling2:boolean) {
+export async function triggerParseInitially(obj){
+  let reg = /<%([^%].*?)%>/g
+  if (obj.content) {
+    let regexMatched = obj.content.match(reg)
+      for (const x in regexMatched){
+        let toBeParsed = obj.content
+        var currentMatch = regexMatched[x]
+        let formattedMatch = await parseDynamically(currentMatch);
+        let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
+        obj.content = newRegexString
+    }
+     }
+    
+  await obj.children.map(triggerParseInitially)
+}
+
+export async function insertProperlyTemplatedBlock (blockUuid2, template2, sibling3:boolean, parameters = []){
+
+  insertProperlyTemplatedBlock2(blockUuid2, template2, sibling3, parameters)
+  
+}
+async function insertProperlyTemplatedBlock2 (blockUuid, template, sibling2:boolean, parameters = []) {
     var query = `
     [:find (pull ?b [*])
    :where
@@ -36,6 +59,7 @@ blockUuid2 = blockUuid
     try {
       let ret = await logseq.DB.datascriptQuery(query)
       const results = ret?.flat()
+      
       if(results && results.length > 0) {
         refUUID = results[0].uuid.$uuid$
         const origBlock = await logseq.Editor.getBlock(refUUID, {

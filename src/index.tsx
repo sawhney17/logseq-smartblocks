@@ -13,9 +13,12 @@ import { insertProperlyTemplatedBlock } from './insertTemplatedBlock';
 * main entry
 */
 
+export var valueCount = 0;
+export var valueArray = [];
+export var currentValueCount = 0;
+export var currentValueArray = [];
 
 async function main () {
-  }
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
           const { blockUuid, template, sibling } = e.dataset
@@ -26,20 +29,15 @@ async function main () {
 
     logseq.App.registerCommandPalette(
       {
-        key: 'logseq-noTODO-plugin',
+        key: 'logseq-noT2ODO-plugin',
         label: "Quick todo to today's journal page",
         keybinding: {
-          binding: 'm t',
+          binding: 'm y',
         },
       },
       () => {
+        //make opacity of whole doucment to 0.5
         logseq.showMainUI();
-  
-        document.addEventListener('keydown', (e: any) => {
-          if (e.keyCode !== 27) {
-            (document.querySelector('.task-field') as HTMLElement).focus();
-          }
-        });
       }
     );
     
@@ -117,6 +115,6 @@ async function main () {
         </React.StrictMode>,
         document.getElementById('app')
       );
-
+  }
 
 logseq.ready(main).catch(console.error)
