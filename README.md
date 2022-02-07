@@ -60,7 +60,7 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 		- `<%month%> = 7: text to be entered`
 3. As of the latest release, you can now have OR statements to result in insertion if *any* of the properties are in action. Simply separate the parameters with `||`. Some examples are as follows
 	- if it's either january or a monday
-		- `<%if month = 100|| if dayofweek = 1||  : text to be entered%>`
+		- `<%if month = 1|| if dayofweek = 1||  : text to be entered%>`
 	- if it's a weekend
 		- `<%if dayofweek = 6|| if dayofweek = 7||  : text to be entered%>`
 ### Using the Random Function
@@ -68,8 +68,13 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 - Use `<randomblock Name of page/tag>`
 	-`<randomblock twitter>`
 	-`<randomblock Tasks Inbox>`
+### Using the current Page functoin
+- If you want to import the current page into the template as a dynamic variable, simply insert the placeholder `<%currentPage%>`
+- Study <%currentPage%> on <%tomorrow%>
+- Will return `Study [[Nuclear Physics]] [[Feb 3, 2022]]`
+
 ### Limitations
-- Only works with dynamic variables up to 4 blocks deep 
+- ~~Only works with dynamic variables up to 4 blocks deep~~ fixed in latest update
 
 ### TODO
 - [x] Enable support for natural language processing for dates allowing for dynamic dates (different date auto added based on current date)
