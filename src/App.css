@@ -569,4 +569,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
+  padding-top: 10px;
 }
+.label-class {
+    color: whitesmoke;
+    font-family: system-ui;
+    padding-bottom: 10px;
+    font-size: larger;}

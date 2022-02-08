@@ -12,7 +12,7 @@ function triggerParse(obj){
     var newRegexString = obj.content
     const regexMatched = obj.content.match(reg)
       for (const x in regexMatched){
-          const toBeParsed = obj.content
+          const toBeParsed = newRegexString
           var currentMatch = regexMatched[x]
           const variableName = currentMatch.slice(2, -2).split(":")[1]
           newRegexString = toBeParsed.replace(currentMatch, replacementArray[variableName])
@@ -30,7 +30,6 @@ for (const x in regexMatched2){
 }
 
 const App = () => {
-  const [value, setValue] = useState('');
     const [formValues, setFormValues] = useState([]);
     const [isOpened, setIsOpened] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -45,7 +44,7 @@ const App = () => {
       setIsOpened(true);
       setFormValues([]);
       valueZero();
-      logseq.hideMainUI()
+      logseq.hideMainUI({ restoreEditingCursor: true });
     }
     let updateUI2 = () => {
       let newFormValues = [...formValues]
@@ -71,7 +70,7 @@ const App = () => {
         setIsOpened(true);
         setFormValues([]);
         editValueArray(formValues);
-        logseq.hideMainUI()
+        logseq.hideMainUI({ restoreEditingCursor: true });
         for (const x in valueArray){
           const value = valueArray[x].value;
           const name = valueArray[x].name;
@@ -87,7 +86,7 @@ const App = () => {
     'keydown',
     function (e) {
       if (e.keyCode === 27) {
-        logseq.hideMainUI({ restoreEditingCursor: true });
+        // logseq.hideMainUI({ restoreEditingCursor: true });
         resetExit(e)
       }
       e.stopPropagation();
@@ -95,18 +94,22 @@ const App = () => {
     false
   );
     return (
-      <div className="flex justify-center h-screen w-screen overlay">
-        <form  onSubmit={handleSubmit} className= "smartblock-popup centered-element">
+      <div>
+      <div className="overlay" onClick={resetExit}></div>
+      <div className='flex justify-center h-screen w-screen'>
+        <form  onSubmit={handleSubmit} className= "smartblock-popup centered-element" id='form'>
           {formValues.map((element, index) => (
             <div className="form-inline" key={index}>
-              <label className= 'text-white'>{valueArray[index].variable}</label> 
+              <label className='labelClass'>{valueArray[index].variable}</label> 
               <input type="text" name="name" value={formValues[index].value} onChange={e => handleChange(index, e)} />
                 
             </div>
           ))}
           <div className="button-section">
           </div>
-
+          {isOpened && (
+            <label>Would you like to insert with inputs?</label>
+      )}
           <div className='grid-container'>
           
         {/* {isOpened && ( */}    
@@ -120,6 +123,7 @@ const App = () => {
       )}
       </div>
       </form>
+     </div>
      </div>
 
     )
