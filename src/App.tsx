@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getDateForPage } from 'logseq-dateutils';
 import { valueArray, valueZero, editValueArray} from './index';
-import './app.css';
+import './App.css';
 import { data, insertProperlyTemplatedBlock2, blockUuid2, sibling} from './insertTemplatedBlock';
 
 var replacementArray = {};
