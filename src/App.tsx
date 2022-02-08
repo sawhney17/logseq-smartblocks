@@ -62,11 +62,6 @@ const App = () => {
         setFormValues(newFormValues);
       }
 
-      // let handleChange = (i, e) => {
-      //   let newFormValues = [...formValues];
-      //   newFormValues[i][e.target.name] = e.target.value;
-      //   setFormValues(newFormValues);
-      // }
     
     
     let handleSubmit = (event) => {
