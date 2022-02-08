@@ -7,7 +7,6 @@ import {getDateForPage } from 'logseq-dateutils';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { handleClosePopup } from './handleClosePopup';
 import { insertProperlyTemplatedBlock } from './insertTemplatedBlock';
 /*
 * main entry
@@ -112,7 +111,6 @@ async function main () {
           }
       });
 
-      handleClosePopup()
       ReactDOM.render(
         <React.StrictMode>
           <App />

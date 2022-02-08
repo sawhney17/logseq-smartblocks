@@ -39,7 +39,7 @@ const App = () => {
     //   setFormValues([...formValues, { name: variables[x], value: "" }])
     // }
 
-    let resetExit = (event) => {
+     let resetExit = (event) => {
       event.preventDefault();
       setIsSubmitted(false);
       setIsOpened(true);
@@ -83,8 +83,19 @@ const App = () => {
 
     }
 
+    document.addEventListener(
+    'keydown',
+    function (e) {
+      if (e.keyCode === 27) {
+        logseq.hideMainUI({ restoreEditingCursor: true });
+        resetExit(e)
+      }
+      e.stopPropagation();
+    },
+    false
+  );
     return (
-      <div className="flex justify-center h-screen w-screen overlay" >
+      <div className="flex justify-center h-screen w-screen overlay">
         <form  onSubmit={handleSubmit} className= "smartblock-popup centered-element">
           {formValues.map((element, index) => (
             <div className="form-inline" key={index}>

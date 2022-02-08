@@ -1,4 +1,4 @@
-export const handleClosePopup = () => {
+// export const handleClosePopup = () => {
   // ESC
   // document.addEventListener(
   //   'keydown',
@@ -10,4 +10,4 @@ export const handleClosePopup = () => {
   //   },
   //   false
   // );
-};
+// };
