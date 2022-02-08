@@ -18,6 +18,12 @@ export var valueArray = [];
 export var currentValueCount = 0;
 export var currentValueArray = [];
 
+export function editValueArray(value: Array<object>){
+  valueArray = value;
+}
+export function valueZero(){
+  valueArray = [];
+}
 async function main () {
     logseq.provideModel({
         async insertTemplatedBlock (e: any) {
@@ -40,8 +46,6 @@ async function main () {
         logseq.showMainUI();
       }
     );
-    
-
     logseq.provideStyle(`
     .templater-btn {
        border: 1px solid var(--ls-border-color); 

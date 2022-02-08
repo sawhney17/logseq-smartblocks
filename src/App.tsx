@@ -1,23 +1,91 @@
 import React, { useState } from 'react';
 import { getDateForPage } from 'logseq-dateutils';
-import { valueArray, currentValueArray, currentValueCount, valueCount } from './index';
+import { valueArray, valueZero, editValueArray} from './index';
+import './app.css';
+import { data, insertProperlyTemplatedBlock2, blockUuid2, sibling} from './insertTemplatedBlock';
 
-const name = "djkdh"
-const variables = ["variable1", "variable2", "variable3"]
+var replacementArray = {};
+function triggerParse(obj){
+  const reg = /<%setInput:([^%].*?)%>/gi;
+  const reg2 = /<%getInput:([^%].*?)%>/gi;
+  if (obj.content) {
+    var newRegexString = obj.content
+    const regexMatched = obj.content.match(reg)
+      for (const x in regexMatched){
+          const toBeParsed = obj.content
+          var currentMatch = regexMatched[x]
+          const variableName = currentMatch.slice(2, -2).split(":")[1]
+          newRegexString = toBeParsed.replace(currentMatch, replacementArray[variableName])
+      }
+      const regexMatched2 = obj.content.match(reg2)
+for (const x in regexMatched2){
+  const toBeParsed = newRegexString
+  var currentMatch = regexMatched2[x]
+  const variableName = currentMatch.slice(2, -2).split(":")[1]
+  newRegexString = toBeParsed.replace(currentMatch, replacementArray[variableName])
+}
+    obj.content = newRegexString
+     }
+  obj.children.map(triggerParse)
+}
+
 const App = () => {
+  const [value, setValue] = useState('');
+    const [formValues, setFormValues] = useState([]);
+    const [isOpened, setIsOpened] = useState(true);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [formValues, setFormValues] = useState([{ name: "", email : ""}, { name: "", email : ""}]);
+    // for (const x in variables){
+    //   setFormValues([...formValues, { name: variables[x], value: "" }])
+    // }
 
-      
+    let resetExit = (event) => {
+      event.preventDefault();
+      setIsSubmitted(false);
+      setIsOpened(true);
+      setFormValues([]);
+      valueZero();
+      logseq.hideMainUI()
+    }
+    let updateUI2 = () => {
+      let newFormValues = [...formValues]
+      for (const x in valueArray){
+        newFormValues.push({name: valueArray[x].variable, value: "" })
+      }
+      setFormValues(newFormValues)
+      setIsSubmitted(true)
+      setIsOpened(wasOpened => !wasOpened);
+    }
     let handleChange = (i, e) => {
         let newFormValues = [...formValues];
-        newFormValues[i][e.target.name] = e.target.value;
+        newFormValues[i]["value"] = e.target.value;
         setFormValues(newFormValues);
       }
+
+      // let handleChange = (i, e) => {
+      //   let newFormValues = [...formValues];
+      //   newFormValues[i][e.target.name] = e.target.value;
+      //   setFormValues(newFormValues);
+      // }
+    
     
     let handleSubmit = (event) => {
         event.preventDefault();
-        alert(JSON.stringify(formValues));
+        // alert(JSON.stringify(formValues));
+        setIsSubmitted(false);
+        setIsOpened(true);
+        setFormValues([]);
+        editValueArray(formValues);
+        logseq.hideMainUI()
+        for (const x in valueArray){
+          const value = valueArray[x].value;
+          const name = valueArray[x].name;
+          replacementArray[name] = value;
+        }
+        triggerParse(data)
+        valueZero();
+        insertProperlyTemplatedBlock2(blockUuid2, sibling, data)
+
     }
 
     return (
@@ -25,15 +93,26 @@ const App = () => {
         <form  onSubmit={handleSubmit} className= "smartblock-popup centered-element">
           {formValues.map((element, index) => (
             <div className="form-inline" key={index}>
-              <label className= 'text-white'>{variables[index]}</label>
-              <input type="text" name="name" value={element.name || ""} onChange={e => handleChange(index, e)} />
-              <label className= 'text-white'>Value</label>
-              <input type="text" name="email" value={element.email || ""} onChange={e => handleChange(index, e)} />
+              <label className= 'text-white'>{valueArray[index].variable}</label> 
+              <input type="text" name="name" value={formValues[index].value} onChange={e => handleChange(index, e)} />
+                
             </div>
           ))}
           <div className="button-section">
-              <button className="button submit" type="submit">Submit</button>
           </div>
+
+          <div className='grid-container'>
+          
+        {/* {isOpened && ( */}    
+            <button type="button" className="button remove hidden grid-child" onClick={resetExit}>Go Back</button>
+      {/* )} */}
+        {isSubmitted && (
+            <button className="button submit grid-child" type="submit">Submit</button>  
+      )}
+        {isOpened && (
+            <button type="button" className="button submit hidden grid-child" onClick={updateUI2}>Continue</button>
+      )}
+      </div>
       </form>
      </div>
 
@@ -42,56 +121,3 @@ const App = () => {
 
 export default App
 
-
-// const App = () => {
-//   const [taskVal, setTaskVal] = useState('');
-
-//   const handleForm = (e: any) => {
-//     setTaskVal(e.target.value);
-//   };
-//   const handleSubmit = async (e: any) => {
-//     console.log("submit Clicked")
-//     if (e.keyCode === 13) {
-//       if (taskVal.length > 0) {
-//         // const startingDate = getDateForPage(
-//         //   new Date(),
-//         //   logseq.settings.preferredDateFormat
-//         // );
-//         console.log("submit Clicked")
-//         console.log(taskVal)
-
-//         setTaskVal('');
-
-//         logseq.hideMainUI({ restoreEditingCursor: true });
-
-//         logseq.App.showMsg(`${taskVal} added to today's journal page!`);
-//       } else {
-//         logseq.App.showMsg(
-//           'Please enter a task first or press Esc to close the popup.'
-//         );
-//       }
-//     }
-//   };
-
-//   return (
-//     <div
-//       className="task-container flex justify-center border border-black"
-//       tabIndex={-1}
-//     >
-//       <div className=" absolute top-10 bg-white rounded-lg p-3 w-1/3 border">
-//         <input
-//           className="task-field appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-//           type="text"
-//           placeholder="Enter your task to add to today's journal page"
-//           aria-label="quick todo"
-//           name="taskVal"
-//           onChange={handleForm}
-//           value={taskVal}
-//           onKeyDown={(e) => handleSubmit(e)}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default App;

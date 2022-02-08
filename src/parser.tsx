@@ -50,6 +50,10 @@ function parseConditional(condition:string, value){
       return "Error"
   }
 }
+
+export function parseVariablesOne(template){
+  
+}
 export async function parseDynamically(blockContent){
     const userConfigs = await logseq.App.getUserConfigs();
     const preferredDateFormat = userConfigs.preferredDateFormat;
