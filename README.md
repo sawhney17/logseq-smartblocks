@@ -80,8 +80,16 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 - [x] Enable support for natural language processing for dates allowing for dynamic dates (different date auto added based on current date)
 - [ ] Allow NLP dates in if statements
 
+### Using variables and inputs
+- If you update to the latest version, you can create inputs and variables
+- To set an input use the variable <%setinput: inputName%>
+	- When you call the smartblock, you will then be able to define inputs for those inputs, they will auto replace these blocks
+- To access the property of an existing input, let's say you've already set the input `people` using <%setinput: people%>
+	- You can now access the already defined input via the line <%getinput: people%> without it prompting you again. 
+- You can even pass dynamic variables like <%current page%> as an input!
 ## Property Renderer
 Has been shifted to it's own plugin: https://github.com/sawhney17/logseq-property-visualizer
+
 
 # Credits 
 > If you like the work I'm doing, consider [buying me a coffee](https://www.buymeacoffee.com/sawhney17) :)
