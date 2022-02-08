@@ -78,9 +78,12 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 
 ### TODO
 - [x] Enable support for natural language processing for dates allowing for dynamic dates (different date auto added based on current date)
+- [ ] Allow user to set variables via inputs
 - [ ] Allow NLP dates in if statements
 
 ### Using variables and inputs
+![Screen Recording 2022-02-08 at 11 58 41 AM](https://user-images.githubusercontent.com/80150109/152961013-3dd95af1-beb3-45ad-9f12-4b62176517df.gif)
+
 - If you update to the latest version, you can create inputs and variables
 - To set an input use the variable <%setinput: inputName%>
 	- When you call the smartblock, you will then be able to define inputs for those inputs, they will auto replace these blocks
