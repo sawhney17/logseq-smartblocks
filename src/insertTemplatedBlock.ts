@@ -99,8 +99,6 @@ export async function insertProperlyTemplatedBlock2 (blockUuid, sibling2, origBl
       //   const origBlock = await logseq.Editor.getBlock(refUUID, {
       //     includeChildren: true,
       //   });
-      console.log("sibling2")
-      console.log(sibling2)
         data = origBlock
         function insertFinally (){
           logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, {sibling:(sibling2 === 'true')});
