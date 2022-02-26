@@ -59,7 +59,7 @@ async function main () {
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
       logseq.Editor.registerSlashCommand('Create Inline SmartBlock(guided)', async () => {
-        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblockInline, template name}} `);
+        await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblockInline, template name, sibling?}} `);
         // templaterBlock = await logseq.Editor.getCurrentBlock();
       });
         
