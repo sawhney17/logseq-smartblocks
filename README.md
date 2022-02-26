@@ -27,7 +27,8 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 	- Follow the below syntax for flags and setup of the original template
 - Running smartblocks expansion inline
 	- Use the slash command to insert templater inline
-	- 
+	- Follows slightly different syntax for flags with the format being `{{renderer :smartblockInline, templateName, sibling?}}`
+	- Sample: `{{renderer :smartblockInline, journalTemplate, true}}`
 ### Flags
 - You can configure the templater in the following ways
 	1. Set template(required)

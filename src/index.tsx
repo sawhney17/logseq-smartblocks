@@ -28,23 +28,10 @@ async function main () {
         async insertTemplatedBlock (e: any) {
           const { blockUuid, template, sibling } = e.dataset
             insertProperlyTemplatedBlock(blockUuid, template, sibling)
-            
+            console.log(sibling)
         }
     }),
 
-    logseq.App.registerCommandPalette(
-      {
-        key: 'logseq-noT2ODO-plugin',
-        label: "Quick todo to today's journal page",
-        keybinding: {
-          binding: 'm y',
-        },
-      },
-      () => {
-        //make opacity of whole doucment to 0.5
-        logseq.showMainUI();
-      }
-    );
     logseq.provideStyle(`
     .templater-btn {
        border: 1px solid var(--ls-border-color); 
@@ -99,13 +86,13 @@ async function main () {
             reset: true,
             slot,
             template: `
-            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling = ${realSiblings} data-template="${template}" data-title="${title}"
+            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling = ${sibling} data-template="${template}" data-title="${title}"
             data-on-click="insertTemplatedBlock">${title}</button>
            `,
           });
         }
         if (type ==':smartblockInline'){
-          await insertProperlyTemplatedBlock(payload.uuid, template, true).then(function(result){
+          await insertProperlyTemplatedBlock(payload.uuid, template, title).then(function(result){
             logseq.Editor.updateBlock(payload.uuid, "")
             })
           }

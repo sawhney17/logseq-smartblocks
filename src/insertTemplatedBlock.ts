@@ -45,7 +45,7 @@ export function triggerParseInitially(obj){
   obj.children.map(triggerParseInitially)
 }
 
- export async function insertProperlyTemplatedBlock (blockUuid3, template2, sibling3:boolean, parameters = []){
+ export async function insertProperlyTemplatedBlock (blockUuid3, template2, sibling3, parameters = []){
   var query = `
   [:find (pull ?b [*])
  :where
@@ -53,6 +53,8 @@ export function triggerParseInitially(obj){
  [(get ?p :template) ?ty]
  [(= "${template2}" ?ty)]]`
 blockUuid2 = blockUuid3
+console.log("sibling3")
+console.log(sibling3)
 sibling = sibling3
   let refUUID
   try {
@@ -97,6 +99,8 @@ export async function insertProperlyTemplatedBlock2 (blockUuid, sibling2, origBl
       //   const origBlock = await logseq.Editor.getBlock(refUUID, {
       //     includeChildren: true,
       //   });
+      console.log("sibling2")
+      console.log(sibling2)
         data = origBlock
         function insertFinally (){
           logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, {sibling:(sibling2 === 'true')});
