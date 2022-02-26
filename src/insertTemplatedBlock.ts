@@ -53,8 +53,6 @@ export function triggerParseInitially(obj){
  [(get ?p :template) ?ty]
  [(= "${template2}" ?ty)]]`
 blockUuid2 = blockUuid3
-console.log("sibling3")
-console.log(sibling3)
 sibling = sibling3
   let refUUID
   try {
