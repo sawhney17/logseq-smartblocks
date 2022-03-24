@@ -1,5 +1,6 @@
 import { getDateForPage } from "logseq-dateutils";
 import Sherlock from "sherlockjs";
+import { persistUUID } from "./insertUUID";
 async function parseRandomly(pageName: string) {
   pageName.toLowerCase();
   let query = `[:find (pull ?b [*])
@@ -10,7 +11,10 @@ async function parseRandomly(pageName: string) {
   let flattenedResults = results.map((mappedQuery) => ({
     uuid: mappedQuery[0].uuid["$uuid$"],
   }));
+
+    
   let index = Math.floor(Math.random() * flattenedResults.length);
+  persistUUID(flattenedResults[index].uuid);
   return `((${flattenedResults[index].uuid}))`;
 }
 function parseConditional(condition: string, value) {

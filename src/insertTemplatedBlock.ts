@@ -6,6 +6,7 @@ import {
 import { parseDynamically } from './parser';
 
 import { valueArray } from './index';
+import { persistUUID } from './insertUUID';
 export var data = null
 
 export var blockUuid2
@@ -96,7 +97,8 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
   //   });
   data = origBlock
   function insertFinally() {
-    logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') });
+    logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') })
+    
   }
 
   triggerParse(data)
