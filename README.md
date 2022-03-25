@@ -29,6 +29,7 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 	- Use the slash command to insert templater inline
 	- Follows slightly different syntax for flags with the format being `{{renderer :smartblockInline, templateName, sibling?}}`
 	- Sample: `{{renderer :smartblockInline, journalTemplate, true}}`
+	- When this is in a block marked template, then this won't auto expand to allow for usage in regular logseq templates or as a daily note template
 ### Flags
 - You can configure the templater in the following ways
 	1. Set template(required)

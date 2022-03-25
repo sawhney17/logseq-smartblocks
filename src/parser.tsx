@@ -3,8 +3,8 @@ import Sherlock from "sherlockjs";
 import { persistUUID } from "./insertUUID";
 
 import axios from "axios";
-import { editNetworkRequest, networkRequest } from "./insertTemplatedBlock";
-let APIKEY = "SECRETS_KEY";
+import { editNetworkRequest } from "./insertTemplatedBlock";
+let APIKEY = "2fb0b3a40a699e95a2062c8253c42cf7";
 async function parseRandomly(pageName: string) {
   pageName.toLowerCase();
   let query = `[:find (pull ?b [*])
@@ -22,7 +22,6 @@ async function parseRandomly(pageName: string) {
 }
 
 function parseWeather(data, format) {
-  console.log("weather parse")
   let emojiArray = {
       Clear: "🔆",
       Clouds: "🌥",
@@ -34,20 +33,10 @@ function parseWeather(data, format) {
     }
   let temperature;
   if (format == "f") {
-    console.log(format)
     temperature = (data.main.temp - 273.15) * 9/5 + 32
-    console.log(temperature)
   } else {
-    console.log(format)
-    console.log(data.main)
-    console.log(data.main.temp)
-    console.log("htis is the atmetempt")
     temperature = data.main.temp - 273.15
-    console.log(temperature)
   }
-  console.log(temperature)
-  console.log(data.weather[0].main)
-  console.log(`${temperature}° ${emojiArray[data.weather[0].main]}`)
   return `${temperature}°${emojiArray[data.weather[0].main]}`;
 }
 function parseConditional(condition: string, value) {
@@ -85,7 +74,6 @@ function parseConditional(condition: string, value) {
 
 export function parseVariablesOne(template) {}
 export async function parseDynamically(blockContent) {
-  console.log("occurence");
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat = userConfigs.preferredDateFormat;
   let currentTime = new Date();
@@ -120,13 +108,10 @@ export async function parseDynamically(blockContent) {
           editNetworkRequest(true);
           let url = `http://api.openweathermap.org/geo/1.0/direct?q=${weatherLocation}&limit=1&appid=${APIKEY}`;
           let locationLongLat = await axios.get(url);
-          console.log(locationLongLat.data[0].lat);
           let lon = locationLongLat.data[0].lon;
-          console.log("you are mean");
           let lat = locationLongLat.data[0].lat;
 
           let url2 = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
-          console.log(url2);
 
           let weatherData = await axios.get(url2);
           return parseWeather(weatherData.data, weatherFormat);

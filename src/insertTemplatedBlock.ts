@@ -8,11 +8,13 @@ import { parseDynamically } from './parser';
 import { valueArray } from './index';
 import { persistUUID } from './insertUUID';
 export var networkRequest = false
-
+export var stopStatus = true
 export function editNetworkRequest(value){
   networkRequest = value
-
 }
+// export function editNetworkRequest(value){
+//   networkRequest = value
+// }
 export var data = null
 const reg = /<%([^%].*?)%>/g
 export var blockUuid2
@@ -82,23 +84,6 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
 
 }
 export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlock) {
-  //     var query = `
-  //     [:find (pull ?b [*])
-  //    :where
-  //    [?b :block/properties ?p]
-  //    [(get ?p :template) ?ty]
-  //    [(= "${template}" ?ty)]]`
-  // blockUuid2 = blockUuid
-  //     let refUUID
-  // try {
-  //       let ret = await logseq.DB.datascriptQuery(query)
-  // const results = ret?.flat()
-
-  // if(results && results.length > 0) {
-  //   refUUID = results[0].uuid.$uuid$
-  //   const origBlock = await logseq.Editor.getBlock(refUUID, {
-  //     includeChildren: true,
-  //   });
   data = origBlock
   function insertFinally() {
     logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') })
@@ -107,6 +92,7 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
   triggerParse(data)
   timeOutShouldBeSet()
   function checkDiff(){
+
     if (currentRun != previousRun){
       previousRun = currentRun
       timeOutShouldBeSet()
@@ -114,14 +100,15 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
       console.log(currentRun)
     }
     else{
-      console.log(networkRequest)
       if (networkRequest == true){
         setTimeout(function () {
           checkDiff()
           networkRequest = false
         }, 500);
       }
-      else{insertFinally()}
+      else{
+        logseq.App.showMsg("Run has begun")
+        insertFinally()}
     }
   }
   function timeOutShouldBeSet() {

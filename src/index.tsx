@@ -10,6 +10,20 @@ import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
  * main entry
  */
 
+async function checkTemplate(uuid){ //Credits to Alex for this implementation https://github.com/QWxleA 
+  //is block(uuid) on a template?
+  try {
+    let block = await logseq.Editor.getBlock(uuid)
+    let checkTPL = (block.properties && block.properties.template != undefined) ? true : false
+    let checkPRT = (block.parent != null && block.parent.id !== block.page.id)  ? true : false
+
+    if (checkTPL === false && checkPRT === false) return false
+    if (checkTPL === true )                       return true 
+    return await checkTemplate(block.parent.id) 
+
+  } catch (error) { console.log(error) }
+}
+
 export var valueCount = 0;
 export var valueArray = [];
 export var currentValueCount = 0;
@@ -26,7 +40,6 @@ async function main() {
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling } = e.dataset;
       insertProperlyTemplatedBlock(blockUuid, template, sibling);
-      console.log(sibling);
     },
   }),
     logseq.provideStyle(`
@@ -97,11 +110,24 @@ async function main() {
       });
     }
     if (type == ":smartblockInline") {
+      if (!await checkTemplate(payload.uuid)){
+        logseq.Editor.updateBlock(payload.uuid, "");
       await insertProperlyTemplatedBlock(payload.uuid, template, title).then(
         function (result) {
           logseq.Editor.updateBlock(payload.uuid, "");
         }
-      );
+      )
+    }
+      else{
+        logseq.provideUI({
+          key: "SmartBlocksInline for Logseq",
+          reset: true,
+          slot,
+          template: `
+              <label class="templater-btn">Template: ${template}</label>
+             `,
+        });
+      }
     }
   });
 
