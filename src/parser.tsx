@@ -55,9 +55,9 @@ export async function parseDynamically(blockContent) {
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat = userConfigs.preferredDateFormat;
   let currentTime = new Date();
-  let ifParsing = /(i+f)/;
-  let pageBlock = /currentpage/;
-  let randomParsing = /randomblock/;
+  let ifParsing = /(i+f)/gi;
+  let pageBlock = /currentpage/gi;
+  let randomParsing = /randomblock/gi;
   let parsedInput = blockContent.slice(2, -2);
   if (blockContent.match(ifParsing)) {
     let input = parsedInput.split(":");
