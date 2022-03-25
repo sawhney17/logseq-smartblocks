@@ -69,6 +69,14 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 - Use `<randomblock Name of page/tag>`
 	-`<randomblock twitter>`
 	-`<randomblock Tasks Inbox>`
+
+### Using the weather function
+- Makes it possible to grab the current weather from Open Weather Map API
+- Format used is `<%weatherf Dubai%>`
+	- Start with weather
+	- Add the desired format, either `f` for farenheight or `c` for celcius
+	- Add your current location, don't be too speciifc, weather data *may* not always be available for more specific searches
+- Format returned is `30° 🌧`
 ### Using the current Page functoin
 - If you want to import the current page into the template as a dynamic variable, simply insert the placeholder `<%currentPage%>`
 - Study <%currentPage%> on <%tomorrow%>

@@ -1,6 +1,10 @@
 import { getDateForPage } from "logseq-dateutils";
 import Sherlock from "sherlockjs";
 import { persistUUID } from "./insertUUID";
+
+import axios from "axios";
+import { editNetworkRequest, networkRequest } from "./insertTemplatedBlock";
+let APIKEY = "SECRETS_KEY";
 async function parseRandomly(pageName: string) {
   pageName.toLowerCase();
   let query = `[:find (pull ?b [*])
@@ -12,10 +16,39 @@ async function parseRandomly(pageName: string) {
     uuid: mappedQuery[0].uuid["$uuid$"],
   }));
 
-    
   let index = Math.floor(Math.random() * flattenedResults.length);
   persistUUID(flattenedResults[index].uuid);
   return `((${flattenedResults[index].uuid}))`;
+}
+
+function parseWeather(data, format) {
+  console.log("weather parse")
+  let emojiArray = {
+      Clear: "🔆",
+      Clouds: "🌥",
+      Atmosphere: "🌫",
+      Snow: "❄️",
+      Rain: "🌧",
+      Drizzle: "🌧",
+      Thunderstorm: "⛈",
+    }
+  let temperature;
+  if (format == "f") {
+    console.log(format)
+    temperature = (data.main.temp - 273.15) * 9/5 + 32
+    console.log(temperature)
+  } else {
+    console.log(format)
+    console.log(data.main)
+    console.log(data.main.temp)
+    console.log("htis is the atmetempt")
+    temperature = data.main.temp - 273.15
+    console.log(temperature)
+  }
+  console.log(temperature)
+  console.log(data.weather[0].main)
+  console.log(`${temperature}° ${emojiArray[data.weather[0].main]}`)
+  return `${temperature}°${emojiArray[data.weather[0].main]}`;
 }
 function parseConditional(condition: string, value) {
   switch (condition) {
@@ -52,12 +85,14 @@ function parseConditional(condition: string, value) {
 
 export function parseVariablesOne(template) {}
 export async function parseDynamically(blockContent) {
+  console.log("occurence");
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat = userConfigs.preferredDateFormat;
   let currentTime = new Date();
   let ifParsing = /(i+f)/gi;
-  let pageBlock = /currentpage/gi;
-  let randomParsing = /randomblock/gi;
+  let pageBlock = /currentpage/;
+  let randomParsing = /randomblock/;
+  let weatherQuery = /weather/;
   let parsedInput = blockContent.slice(2, -2);
   if (blockContent.match(ifParsing)) {
     let input = parsedInput.split(":");
@@ -74,6 +109,36 @@ export async function parseDynamically(blockContent) {
     } else {
       return "";
     }
+  }
+  if (blockContent.match(weatherQuery)) {
+      try {
+        
+        let spacedSplit = parsedInput.split(" ");
+        let weatherLocation = spacedSplit[1];
+        let weatherFormat = spacedSplit[0].split("weather")[1];
+        try {
+          editNetworkRequest(true);
+          let url = `http://api.openweathermap.org/geo/1.0/direct?q=${weatherLocation}&limit=1&appid=${APIKEY}`;
+          let locationLongLat = await axios.get(url);
+          console.log(locationLongLat.data[0].lat);
+          let lon = locationLongLat.data[0].lon;
+          console.log("you are mean");
+          let lat = locationLongLat.data[0].lat;
+
+          let url2 = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
+          console.log(url2);
+
+          let weatherData = await axios.get(url2);
+          return parseWeather(weatherData.data, weatherFormat);
+        } catch(error) {
+          console.log(error)
+          return "Oops, unable to reach servers";
+          
+        }
+      } catch {
+        return "Oops, no location provided";
+      }
+
   }
   if (blockContent.toLowerCase().match(pageBlock)) {
     let currentp3age = await logseq.Editor.getCurrentPage();
@@ -109,6 +174,7 @@ export async function parseDynamically(blockContent) {
   const parsedBlock = await Sherlock.parse(blockContent);
   // Destructure
   const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
+
   if (startDate == null) {
     return blockContent;
   }

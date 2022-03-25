@@ -7,7 +7,12 @@ import { parseDynamically } from './parser';
 
 import { valueArray } from './index';
 import { persistUUID } from './insertUUID';
-export var networkRequest;
+export var networkRequest = false
+
+export function editNetworkRequest(value){
+  networkRequest = value
+
+}
 export var data = null
 const reg = /<%([^%].*?)%>/g
 export var blockUuid2
@@ -23,6 +28,7 @@ async function triggerParse(obj) {
       let formattedMatch = await parseDynamically(currentMatch);
       let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
       obj.content = newRegexString
+      console.log(newRegexString)
     }
   }
   currentRun += 1
@@ -108,25 +114,20 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
       console.log(currentRun)
     }
     else{
-      
+      console.log(networkRequest)
       if (networkRequest == true){
         setTimeout(function () {
           checkDiff()
           networkRequest = false
-        }, 200);
+        }, 500);
       }
-      console.log("YAYAYYAYAY")
+      else{insertFinally()}
     }
   }
   function timeOutShouldBeSet() {
     setTimeout(function () {
       checkDiff()
-    }, 30);
-  }
-  function timeOutShouldBeSet2() {
-    setTimeout(function () {
-      checkDiff()
-    }, 30);
+    }, 100);
   }
   if (origBlock.children.length === 0 || !origBlock.children) {
     logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
