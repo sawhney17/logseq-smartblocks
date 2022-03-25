@@ -7,13 +7,14 @@ import { parseDynamically } from './parser';
 
 import { valueArray } from './index';
 import { persistUUID } from './insertUUID';
+export var networkRequest;
 export var data = null
-
+const reg = /<%([^%].*?)%>/g
 export var blockUuid2
 export var sibling
-
+var currentRun = 1
+var previousRun = 0
 async function triggerParse(obj) {
-  let reg = /<%([^%].*?)%>/g
   if (obj.content) {
     let regexMatched = obj.content.match(reg)
     for (const x in regexMatched) {
@@ -24,12 +25,11 @@ async function triggerParse(obj) {
       obj.content = newRegexString
     }
   }
-
+  currentRun += 1
   await obj.children.map(triggerParse)
 }
 
 export function triggerParseInitially(obj) {
-  let reg = /<%([^%].*?)%>/g
   if (obj.content) {
     let regexMatched = obj.content.match(reg)
     for (const x in regexMatched) {
@@ -39,7 +39,6 @@ export function triggerParseInitially(obj) {
       }
     }
   }
-
   obj.children.map(triggerParseInitially)
 }
 
@@ -72,7 +71,6 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
       }
     }
   } catch (error) {
-    console.log(error)
   }
 
 
@@ -98,13 +96,38 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
   data = origBlock
   function insertFinally() {
     logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') })
-    
   }
 
   triggerParse(data)
-  setTimeout(function () {
-    insertFinally()
-  }, 100);
+  timeOutShouldBeSet()
+  function checkDiff(){
+    if (currentRun != previousRun){
+      previousRun = currentRun
+      timeOutShouldBeSet()
+      console.log(previousRun)
+      console.log(currentRun)
+    }
+    else{
+      
+      if (networkRequest == true){
+        setTimeout(function () {
+          checkDiff()
+          networkRequest = false
+        }, 200);
+      }
+      console.log("YAYAYYAYAY")
+    }
+  }
+  function timeOutShouldBeSet() {
+    setTimeout(function () {
+      checkDiff()
+    }, 30);
+  }
+  function timeOutShouldBeSet2() {
+    setTimeout(function () {
+      checkDiff()
+    }, 30);
+  }
   if (origBlock.children.length === 0 || !origBlock.children) {
     logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
   }
