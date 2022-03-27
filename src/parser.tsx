@@ -4,7 +4,8 @@ import { persistUUID } from "./insertUUID";
 
 import axios from "axios";
 import { editNetworkRequest } from "./insertTemplatedBlock";
-let APIKEY = "2fb0b3a40a699e95a2062c8253c42cf7";
+// set APIKEY to be equal to the api key from github secrets
+const APIKEY = process.env.APIKEY;
 async function parseRandomly(pageName: string) {
   pageName.toLowerCase();
   let query = `[:find (pull ?b [*])

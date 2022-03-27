@@ -8,6 +8,7 @@ on:
 
 env:
   PLUGIN_NAME: logseq-templater-plugin
+  APIKEY: ${{ secrets.APIKEY }}
 
 jobs:
   build:

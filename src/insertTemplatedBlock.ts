@@ -9,12 +9,10 @@ import { valueArray } from './index';
 import { persistUUID } from './insertUUID';
 export var networkRequest = false
 export var stopStatus = true
-export function editNetworkRequest(value){
+export function editNetworkRequest(value) {
   networkRequest = value
 }
-// export function editNetworkRequest(value){
-//   networkRequest = value
-// }
+
 export var data = null
 const reg = /<%([^%].*?)%>/g
 export var blockUuid2
@@ -91,24 +89,25 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
 
   triggerParse(data)
   timeOutShouldBeSet()
-  function checkDiff(){
+  function checkDiff() {
 
-    if (currentRun != previousRun){
+    if (currentRun != previousRun) {
       previousRun = currentRun
       timeOutShouldBeSet()
       console.log(previousRun)
       console.log(currentRun)
     }
-    else{
-      if (networkRequest == true){
+    else {
+      if (networkRequest == true) {
         setTimeout(function () {
           checkDiff()
           networkRequest = false
         }, 500);
       }
-      else{
+      else {
         logseq.App.showMsg("Run has begun")
-        insertFinally()}
+        insertFinally()
+      }
     }
   }
   function timeOutShouldBeSet() {
