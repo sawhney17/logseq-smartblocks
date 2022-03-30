@@ -1,6 +1,6 @@
 {
   "name": "logseq-smartblocks-plugin",
-  "version": "2.6.1",
+  "version": "3.0.0",
   "description": "A plugin to replicate Smartblocks",
   "author": "@sawhney17",
   "license": "MIT",
