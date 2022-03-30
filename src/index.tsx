@@ -6,22 +6,28 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
+import { updateTemplates } from "./searchbar";
+import SearchBar from "./searchbar";
 /*
  * main entry
  */
 
-async function checkTemplate(uuid){ //Credits to Alex for this implementation https://github.com/QWxleA 
+async function checkTemplate(uuid) {
+  //Credits to Alex for this implementation https://github.com/QWxleA
   //is block(uuid) on a template?
   try {
-    let block = await logseq.Editor.getBlock(uuid)
-    let checkTPL = (block.properties && block.properties.template != undefined) ? true : false
-    let checkPRT = (block.parent != null && block.parent.id !== block.page.id)  ? true : false
+    let block = await logseq.Editor.getBlock(uuid);
+    let checkTPL =
+      block.properties && block.properties.template != undefined ? true : false;
+    let checkPRT =
+      block.parent != null && block.parent.id !== block.page.id ? true : false;
 
-    if (checkTPL === false && checkPRT === false) return false
-    if (checkTPL === true )                       return true 
-    return await checkTemplate(block.parent.id) 
-
-  } catch (error) { console.log(error) }
+    if (checkTPL === false && checkPRT === false) return false;
+    if (checkTPL === true) return true;
+    return await checkTemplate(block.parent.id);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export var valueCount = 0;
@@ -36,6 +42,7 @@ export function valueZero() {
   valueArray = [];
 }
 async function main() {
+  updateTemplates();
   logseq.provideModel({
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling } = e.dataset;
@@ -70,6 +77,17 @@ async function main() {
     );
     // templaterBlock = await logseq.Editor.getCurrentBlock();
   });
+  logseq.Editor.registerSlashCommand("Insert Smartblock", async (e) => {
+    ReactDOM.render(
+      <React.StrictMode>
+        <SearchBar blockID={e.uuid} />
+      </React.StrictMode>,
+      document.getElementById("app")
+    );
+    logseq.showMainUI();
+    console.log("Insert Smartblock");
+    // templaterBlock = await logseq.Editor.getCurrentBlock();
+  });
   logseq.Editor.registerSlashCommand(
     "Create Inline SmartBlock(guided)",
     async () => {
@@ -88,6 +106,7 @@ async function main() {
   });
 
   logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
+    updateTemplates();
     var [type, template, title, sibling] = payload.arguments;
     if (title == undefined) {
       title = "New Template";
@@ -110,15 +129,14 @@ async function main() {
       });
     }
     if (type == ":smartblockInline") {
-      if (!await checkTemplate(payload.uuid)){
+      if (!(await checkTemplate(payload.uuid))) {
         logseq.Editor.updateBlock(payload.uuid, "");
-      await insertProperlyTemplatedBlock(payload.uuid, template, title).then(
-        function (result) {
-          logseq.Editor.updateBlock(payload.uuid, "");
-        }
-      )
-    }
-      else{
+        await insertProperlyTemplatedBlock(payload.uuid, template, title).then(
+          function (result) {
+            logseq.Editor.updateBlock(payload.uuid, "");
+          }
+        );
+      } else {
         logseq.provideUI({
           key: "SmartBlocksInline for Logseq",
           reset: true,

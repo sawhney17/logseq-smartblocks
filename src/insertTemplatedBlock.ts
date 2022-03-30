@@ -48,7 +48,7 @@ export function triggerParseInitially(obj) {
   obj.children.map(triggerParseInitially)
 }
 
-export async function insertProperlyTemplatedBlock(blockUuid3, template2, sibling3, parameters = []) {
+export async function insertProperlyTemplatedBlock(blockUuid3, template2, sibling3) {
   var query = `
   [:find (pull ?b [*])
  :where

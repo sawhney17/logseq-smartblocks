@@ -6,12 +6,14 @@
 */
 
 *,
+
 ::before,
 ::after {
   box-sizing: border-box; /* 1 */
   border-width: 0; /* 2 */
   border-style: solid; /* 2 */
   border-color: #e5e7eb; /* 2 */
+  
 }
 
 ::before,
@@ -32,7 +34,12 @@ html {
   -moz-tab-size: 4; /* 3 */
   -o-tab-size: 4;
      tab-size: 4; /* 3 */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */;
+  --cl-charcoal: #3f3f3f;
+  --cl-darkjungle: #1e1e1e;
+  --cl-thunder: #4c4c4c;
+
+
 }
 
 /*
@@ -543,7 +550,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgb(111,111,111,0.5); 
+    background: hsla(0,0%,10%,.5);
     z-index: 9; 
 }
 .smartblock-popup {
@@ -576,3 +583,45 @@ body {font-family: Arial, Helvetica, sans-serif;}
     font-family: system-ui;
     padding-bottom: 10px;
     font-size: larger;}
+.smartblock-inserter {
+  padding: 1em;
+  /* background: rgb(40, 157, 165);  */
+  z-index: 9; 
+  border-radius: 15px;
+  top: 30%;
+  width: 50%;
+  display: flex;
+  transform: translate(0, 100px);
+  flex-direction: column;
+  color: #9ba3af;
+  align-items: center;
+  background-color: var(--cl-darkjungle)!important;
+    border-top: 1px solid var(--cl-charcoal);
+    border-right: 1px solid var(--cl-charcoal);
+    border-bottom: 1px solid var(--cl-charcoal);
+    border-left: 1px solid var(--cl-charcoal);
+    font-size: 1.2em;
+  font-family: system-ui;
+  padding: 0.5em;
+  border-radius: 5px;
+  outline: none;
+  /* box-shadow: 0 0 0 0 transparent; */
+  /* transition: box-shadow 0.3s ease-in-out; */
+}
+.cp__palette-input{
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 1.2em;
+  font-family: system-ui;
+  padding: 0.5em;
+  border-radius: 5px;
+  outline: none;
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow 0.3s ease-in-out;
+}
+.searchItem{
+  color: #ffffff
+}
