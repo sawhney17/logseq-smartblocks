@@ -86,6 +86,15 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
     }
     e.handled = true;
   }
+  const insertBlocks = (e) => {
+    insertProperlyTemplatedBlock(
+      blockID,
+      e.target.id,
+      "true"
+    ).then(() => {
+      logseq.hideMainUI({ restoreEditingCursor: true });
+    });
+  }
   const updateHighlight = () => {
     for (const x in searchResults) {
       if (x == highlightedResult) {
@@ -111,7 +120,7 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
           />
           <ul className="w-full text-sm">
             {searchResults.map((item) => (
-              <div id={item} className="hover:bg-[#4c4c4c] p-2 rounded-lg">
+              <div id={item} onClick={insertBlocks}className="hover:bg-[#4c4c4c] p-2 rounded-lg">
                 <div
                   title="template"
                   className="text-xs rounded border mr-2 px-1 inline-block"
