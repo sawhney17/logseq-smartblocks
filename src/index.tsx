@@ -97,6 +97,24 @@ async function main() {
       // templaterBlock = await logseq.Editor.getCurrentBlock();
     }
   );
+  logseq.App.registerCommandPalette({
+    key: 'Toggle Smartblock Inserter',
+    label: 'Select and insert Smartblock',
+    keybinding: {
+      binding: 'mod+t',
+      mode: 'global',
+    }
+  }, async (e) => {
+    if (e.uuid != null){
+      ReactDOM.render(
+        <React.StrictMode>
+          <SearchBar blockID={e.uuid} />
+        </React.StrictMode>,
+        document.getElementById("app")
+      )
+      logseq.showMainUI()
+    }
+  });
 
   logseq.Editor.registerSlashCommand("Create SmartBlock (guided)", async () => {
     await logseq.Editor.insertAtEditingCursor(
