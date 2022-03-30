@@ -96,12 +96,6 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
           .classList.remove("bg-[#4c4c4c]");
       }
     }
-    // if (searchResults.length > 0) {
-    //   let element = document.getElementById(
-    //     `${searchResults[highlightedResult]}`
-    //   );
-    //   element.className = "hover:bg-[#4c4c4c] p-2 rounded-lg";
-    // }
   };
 
   return (
