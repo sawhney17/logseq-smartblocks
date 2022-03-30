@@ -81,7 +81,7 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
         searchResults[highlightedResult],
         "true"
       ).then(() => {
-        logseq.hideMainUI({ restoreEditingCursor: true });
+        
       });
     }
     e.handled = true;

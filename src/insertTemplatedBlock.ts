@@ -5,8 +5,11 @@ import {
 
 import { parseDynamically } from './parser';
 
-import { valueArray } from './index';
+import { renderApp, valueArray } from './index';
 import { persistUUID } from './insertUUID';
+import ReactDOM from 'react-dom';
+import React from 'react';
+import App from './App';
 export var networkRequest = false
 export var stopStatus = true
 export function editNetworkRequest(value) {
@@ -69,9 +72,11 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
       data = origBlock
       triggerParseInitially(data)
       if (valueArray.length > 0) {
+        renderApp()
         logseq.showMainUI()
       }
       else {
+        logseq.hideMainUI({ restoreEditingCursor: true });
         insertProperlyTemplatedBlock2(blockUuid3, sibling3, origBlock)
       }
     }

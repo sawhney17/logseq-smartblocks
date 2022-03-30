@@ -12,6 +12,14 @@ import SearchBar from "./searchbar";
  * main entry
  */
 
+export function renderApp (){
+  ReactDOM.render(
+  <React.StrictMode>
+    <App/>
+  </React.StrictMode>,
+  document.getElementById("app")
+);}
+
 async function checkTemplate(uuid) {
   //Credits to Alex for this implementation https://github.com/QWxleA
   //is block(uuid) on a template?
@@ -167,12 +175,7 @@ async function main() {
     }
   });
 
-  ReactDOM.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-    document.getElementById("app")
-  );
+  
 }
 
 logseq.ready(main).catch(console.error);

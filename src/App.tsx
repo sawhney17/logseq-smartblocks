@@ -45,10 +45,6 @@ const App = () => {
   const [isOpened, setIsOpened] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // for (const x in variables){
-  //   setFormValues([...formValues, { name: variables[x], value: "" }])
-  // }
-
   let resetExit = (event) => {
     event.preventDefault();
     setIsSubmitted(false);
@@ -105,7 +101,7 @@ const App = () => {
     <div>
       <div className="overlay" onClick={resetExit}></div>
       <div className="flex justify-center h-screen w-screen">
-        <form onSubmit={handleSubmit} className="smartblock-popup" id="form">
+        <form onSubmit={handleSubmit} className="smartblock-popup centered-element" id="form">
           {formValues.map((element, index) => (
             <div className="form-inline" key={index}>
               <label className="labelClass">{valueArray[index].variable}</label>
@@ -123,7 +119,7 @@ const App = () => {
             {/* {isOpened && ( */}
             <button
               type="button"
-              className="button remove hidden grid-child"
+              className="button remove grid-child"
               onClick={resetExit}
             >
               Go Back
@@ -137,7 +133,7 @@ const App = () => {
             {isOpened && (
               <button
                 type="button"
-                className="button submit hidden grid-child"
+                className="button submit grid-child"
                 onClick={updateUI2}
               >
                 Continue
