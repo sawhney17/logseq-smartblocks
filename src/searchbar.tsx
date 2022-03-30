@@ -80,9 +80,7 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
         blockID,
         searchResults[highlightedResult],
         "true"
-      ).then(() => {
-        
-      });
+      )
     }
     e.handled = true;
   }
@@ -91,9 +89,7 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
       blockID,
       e.target.id,
       "true"
-    ).then(() => {
-      logseq.hideMainUI({ restoreEditingCursor: true });
-    });
+    )
   }
   const updateHighlight = () => {
     for (const x in searchResults) {
