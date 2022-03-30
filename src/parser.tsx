@@ -35,8 +35,10 @@ function parseWeather(data, format) {
   let temperature;
   if (format == "f") {
     temperature = (data.main.temp - 273.15) * 9/5 + 32
+    temperature = Math.round((temperature + Number.EPSILON) * 100) / 100
   } else {
     temperature = data.main.temp - 273.15
+    temperature = Math.round((temperature + Number.EPSILON) * 100) / 100
   }
   return `${temperature}°${emojiArray[data.weather[0].main]}`;
 }
