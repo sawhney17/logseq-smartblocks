@@ -28,7 +28,6 @@ async function triggerParse(obj) {
       let formattedMatch = await parseDynamically(currentMatch);
       let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
       obj.content = newRegexString
-      console.log(newRegexString)
     }
   }
   currentRun += 1
@@ -94,8 +93,6 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
     if (currentRun != previousRun) {
       previousRun = currentRun
       timeOutShouldBeSet()
-      console.log(previousRun)
-      console.log(currentRun)
     }
     else {
       if (networkRequest == true) {
