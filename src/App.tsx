@@ -105,11 +105,7 @@ const App = () => {
     <div>
       <div className="overlay" onClick={resetExit}></div>
       <div className="flex justify-center h-screen w-screen">
-        <form
-          onSubmit={handleSubmit}
-          className="smartblock-popup centered-element"
-          id="form"
-        >
+        <form onSubmit={handleSubmit} className="smartblock-popup" id="form">
           {formValues.map((element, index) => (
             <div className="form-inline" key={index}>
               <label className="labelClass">{valueArray[index].variable}</label>
