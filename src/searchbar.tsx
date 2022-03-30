@@ -5,16 +5,8 @@ import "@logseq/libs";
 import "./tailwind.css";
 import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
 
-// var highlightedResult = 2;
-// function setHighlightedResult(value){
-//   highlightedResult = value
-// }
 let templates;
 
-function setListener() {}
-function removelistener() {
-  document.removeEventListener;
-}
 export function updateTemplates() {
   let query = `
   [:find (pull ?b [*])
