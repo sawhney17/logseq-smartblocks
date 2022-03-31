@@ -108,6 +108,7 @@ const App = () => {
               <input
                 type="text"
                 name="name"
+                className="text-black"
                 value={formValues[index].value}
                 onChange={(e) => handleChange(index, e)}
               />
