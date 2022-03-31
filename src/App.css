@@ -535,7 +535,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
   }
 
   .button:hover {
-    background-color: royalblue;
+    background-color: rgb(0, 0, 0);
   }
 
   .remove {
@@ -594,7 +594,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
   display: flex;
   transform: translate(0, 100px);
   flex-direction: column;
-  color: #9ba3af;
+  color: #ffffff;
   align-items: center;
   background-color: var(--cl-darkjungle)!important;
     border-top: 1px solid var(--cl-charcoal);

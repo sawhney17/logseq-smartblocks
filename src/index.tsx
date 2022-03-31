@@ -8,11 +8,13 @@ import App from "./App";
 import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
 import { updateTemplates } from "./searchbar";
 import SearchBar from "./searchbar";
+import { handleClosePopup } from "./handleClosePopup";
 /*
  * main entry
  */
 
 export function renderApp (){
+  handleClosePopup()
   ReactDOM.render(
   <React.StrictMode>
     <App/>
@@ -86,6 +88,8 @@ async function main() {
     // templaterBlock = await logseq.Editor.getCurrentBlock();
   });
   logseq.Editor.registerSlashCommand("Insert Smartblock", async (e) => {
+    updateTemplates();
+    handleClosePopup()
     ReactDOM.render(
       <React.StrictMode>
         <SearchBar blockID={e.uuid} />
@@ -114,6 +118,7 @@ async function main() {
     }
   }, async (e) => {
     if (e.uuid != null){
+      handleClosePopup()
       ReactDOM.render(
         <React.StrictMode>
           <SearchBar blockID={e.uuid} />

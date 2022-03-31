@@ -100,10 +100,10 @@ const App = () => {
   return (
     <div>
       <div className="overlay" onClick={resetExit}></div>
-      <div className="flex justify-center h-screen w-screen">
-        <form onSubmit={handleSubmit} className="smartblock-popup centered-element" id="form">
+      <div className="flex justify-center w-screen">
+        <form onSubmit={handleSubmit} className="smartblock-inserter" id="form">
           {formValues.map((element, index) => (
-            <div className="form-inline" key={index}>
+            <div className="grid grid-cols-2 gap-4 place-items-auto py-2" key={index}>
               <label className="labelClass">{valueArray[index].variable}</label>
               <input
                 type="text"
