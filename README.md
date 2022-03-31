@@ -1,4 +1,4 @@
-<a href="https://www.buymeacoffee.com/sawhney17" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-violet.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+>If this plugin helps you, I'd really appreciate your support. You can [buy me a coffee here. ](https://www.buymeacoffee.com/sawhney17)
 # SmartBlocks for Logseq
 
 This plugin allows you to create a templater button, which on click, inserts the contents of the template you've specified, under the block. Allows for advanced features and workflows. 
@@ -13,13 +13,18 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 1. Use the slash menu and type `Create templater block`
 2. After the first comma, type the name of the template(Make sure you keep the correct capitalization and spacing)
 3. (Optional) After the second comma, type the name you'd like to show up on the rendered button
-
 ![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662207-c95a285a-fe4c-4e9f-b4d4-b2154330eebd.gif)
 
 ### Usage in action
 ![Screen Recording 2022-01-16 at 5 19 50 PM](https://user-images.githubusercontent.com/80150109/149662222-79f0fa35-c2d8-4070-93d9-a39b0b7b4982.gif)
 ![Screen Recording 2022-01-30 at 12 48 51 AM](https://user-images.githubusercontent.com/80150109/151677540-a9b24fdd-3139-42c5-bfb8-8d0ad967dd84.gif)
+![Screen Recording 2022-03-31 at 10 54 10 AM](https://user-images.githubusercontent.com/80150109/161001870-3dac3eae-8e61-4c40-9568-144f01f401d9.gif)
 
+
+### Expand from smartblock expander
+- In version 3.0.0, you can now expand and select a smartblock _while_ inserting, similar to how Logseq's templates work. 
+- Simply type mod+t or /insert smartblocks and navigate to the desired Smartblock and then hit enter or click it
+	- You can search to filter in this view
 ### Types of expansion
 - You can either expand by creating a templater button or create an inline smartblock expansion
 - Running smartblocks expansion templater
@@ -88,7 +93,7 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 
 ### TODO
 - [x] Enable support for natural language processing for dates allowing for dynamic dates (different date auto added based on current date)
-- [ ] Allow user to set variables via inputs
+- [x] Allow user to set variables via inputs
 - [ ] Allow NLP dates in if statements
 
 ### Using variables and inputs
