@@ -1,5 +1,5 @@
 import "@logseq/libs";
-import { IBatchBlock } from "@logseq/libs/dist/LSPlugin.user";
+import { IBatchBlock, SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
 import Sherlock from "sherlockjs";
 import { getDateForPage } from "logseq-dateutils";
 import React from "react";
@@ -22,6 +22,15 @@ export function renderApp (){
   document.getElementById("app")
 );}
 
+let settings: SettingSchemaDesc[] = [
+  {
+    key: "Keyboard-Shortcut",
+    type: "string",
+    title: "Keyboard Shortcut for Triggering Smartbocks",
+    description: "keyboard shortcut to trigger smartblock insertion window",
+    default: "mod+t"
+  }
+]  
 async function checkTemplate(uuid) {
   //Credits to Alex for this implementation https://github.com/QWxleA
   //is block(uuid) on a template?
@@ -53,6 +62,7 @@ export function valueZero() {
 }
 async function main() {
   updateTemplates();
+  logseq.useSettingsSchema(settings);
   logseq.provideModel({
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling } = e.dataset;
@@ -113,7 +123,7 @@ async function main() {
     key: 'Toggle Smartblock Inserter',
     label: 'Select and insert Smartblock',
     keybinding: {
-      binding: 'mod+t',
+      binding: logseq.settings["Keyboard-Shortcut"],
       mode: 'global',
     }
   }, async (e) => {
