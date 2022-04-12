@@ -11,6 +11,7 @@ import {
 
 var replacementArray = {};
 function triggerParse(obj) {
+  obj.properties = {};
   const reg = /<%setInput:([^%].*?)%>/gi;
   const reg2 = /<%getInput:([^%].*?)%>/gi;
   if (obj.content) {
@@ -103,7 +104,10 @@ const App = () => {
       <div className="flex justify-center w-screen">
         <form onSubmit={handleSubmit} className="smartblock-inserter" id="form">
           {formValues.map((element, index) => (
-            <div className="grid grid-cols-2 gap-4 place-items-auto py-2" key={index}>
+            <div
+              className="grid grid-cols-2 gap-4 place-items-auto py-2"
+              key={index}
+            >
               <label className="labelClass">{valueArray[index].variable}</label>
               <input
                 type="text"
