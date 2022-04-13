@@ -112,5 +112,6 @@ Has been shifted to it's own plugin: https://github.com/sawhney17/logseq-propert
 # Credits 
 > If you like the work I'm doing, consider [buying me a coffee](https://www.buymeacoffee.com/sawhney17) :)
 - [Sherlockjs](https://github.com/neilgupta/Sherlock)
-- Thanks a ton to [hkgnp](https://github.com/hkgnp)and his [NLP plugin](https://github.com/hkgnp/logseq-datenlp-plugin) for implementation inspiration
+- Thanks a ton to [hkgnp](https://github.com/hkgnp) and his [NLP plugin](https://github.com/hkgnp/logseq-datenlp-plugin) for implementation inspiration
 - Credits to the original SmartBlocks plugin for Roam by [@tfthacker](https://twitter.com/tfthacker)
+- Thanks to OpenWeatherMap for weather data
