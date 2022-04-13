@@ -80,17 +80,13 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
         blockID,
         searchResults[highlightedResult],
         "true"
-      )
+      );
     }
     e.handled = true;
   }
   const insertBlocks = (e) => {
-    insertProperlyTemplatedBlock(
-      blockID,
-      e.target.id,
-      "true"
-    )
-  }
+    insertProperlyTemplatedBlock(blockID, e.target.id, "true");
+  };
   const updateHighlight = () => {
     for (const x in searchResults) {
       if (x == highlightedResult) {
@@ -116,14 +112,24 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
           />
           <ul className="w-full text-sm">
             {searchResults.map((item) => (
-              <div id={item} onClick={insertBlocks}className="hover:bg-[#4c4c4c] p-2 rounded-lg">
+              <div
+                id={item}
+                onClick={insertBlocks}
+                className="hover:bg-[#4c4c4c] p-2 rounded-lg"
+              >
                 <div
                   title="template"
                   className="text-xs rounded border mr-2 px-1 inline-block"
+                  onClick={insertBlocks}
                 >
                   T
                 </div>
-                <li className="inline-block px-2 searchItem">{item}</li>
+                <li
+                  className="inline-block px-2 searchItem"
+                  onClick={insertBlocks}
+                >
+                  {item}
+                </li>
               </div>
             ))}
           </ul>
