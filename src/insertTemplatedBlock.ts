@@ -98,7 +98,10 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
       let lastBlock = blockTree[blockTree.length-1]
       logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children as unknown as IBatchBlock, {sibling: true})
     }
-    logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true')})
+    else{
+      logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true')})
+    }
+    
   }
 
   triggerParse(data)

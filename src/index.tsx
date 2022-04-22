@@ -68,8 +68,8 @@ async function main() {
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling, location } = e.dataset;
       let blockUuid2 = blockUuid
-      
-      if (location == ""){
+      console.log(location)
+      if (location == "" || location == "undefined"){
           blockUuid2 = blockUuid
       }
       else if (await logseq.Editor.getBlock(location)!= undefined || (await logseq.Editor.getPage(location)!= undefined)){
