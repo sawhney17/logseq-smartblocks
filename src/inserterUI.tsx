@@ -35,7 +35,7 @@ const InsertionUI: React.FC <{blockUUID}> = (blockUUID) => {
       console.log("his")
       newTitle = "New Smartblock"
     }
-    if (location.length > 10){
+    if (location.length > 0){
       finalString = `{{renderer :smartblock, ${smartblocks[smartblockIndex]}, ${newTitle}, ${sibling}, ${location}}}`
     }
     else {
@@ -55,7 +55,7 @@ const InsertionUI: React.FC <{blockUUID}> = (blockUUID) => {
           <div className="grid grid-cols-2 pb-2">
           <div className="flex justify-between">
             <h1 className="inline-block">Location</h1>
-            <p className="inline-block pr-2 text-sm" data-tip="<p>Takes an optional input of a block ID in the form <code>((62623fd6-d3ff-4ba4-a64e-0492d3926581)).</code> Clicking the button will insert a block under that block ID. By default, it will insert template under the rendered button</p>" data-html={true}>?</p> <ReactTooltip html={true} />
+            <p className="inline-block pr-2 text-sm" data-tip="<p>Takes an optional input of a block ID in the form <code>((62623fd6-d3ff-4ba4-a64e-0492d3926581)).</code>, a page name or a daily note page(parsed using NLP). Clicking the button will insert a block under the defined block/page. By default, it will insert template under the rendered button</p>" data-html={true}>?</p> <ReactTooltip html={true} />
           </div>
           <input id="locationInput" className="text-black" value ={location} onChange={handleChange}></input>
           </div>

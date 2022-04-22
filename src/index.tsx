@@ -1,7 +1,7 @@
 import "@logseq/libs";
 import { IBatchBlock, SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
 import Sherlock from "sherlockjs";
-import { getDateForPage } from "logseq-dateutils";
+import { getDateForPage, getDateForPageWithoutBrackets } from "logseq-dateutils";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
@@ -68,9 +68,19 @@ async function main() {
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling, location } = e.dataset;
       let blockUuid2 = blockUuid
-      if (await logseq.Editor.getBlock(location)!= undefined){
-        blockUuid2 = location
+      
+      if (location == ""){
+          blockUuid2 = blockUuid
       }
+      else if (await logseq.Editor.getBlock(location)!= undefined || (await logseq.Editor.getPage(location)!= undefined)){
+        blockUuid2 = location
+        console.log(location)
+      }
+      else {
+        const parsedBlock = await Sherlock.parse(location);
+        const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
+        blockUuid2 = getDateForPageWithoutBrackets(startDate, (await logseq.App.getUserConfigs()).preferredDateFormat)
+    }
       console.log(blockUuid2)
       insertProperlyTemplatedBlock(blockUuid2, template, sibling);
     },

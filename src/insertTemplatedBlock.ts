@@ -87,8 +87,18 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
 }
 export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlock) {
   data = origBlock
-  function insertFinally() {
-    logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') })
+  async function insertFinally() {
+  let page = await logseq.Editor.getPage(blockUuid)
+    if (page != undefined){
+      console.log(
+        "iserting"
+      )
+      console.log(blockUuid)
+      let blockTree = (await logseq.Editor.getPageBlocksTree(blockUuid))
+      let lastBlock = blockTree[blockTree.length-1]
+      logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children as unknown as IBatchBlock, {sibling: true})
+    }
+    logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true')})
   }
 
   triggerParse(data)
