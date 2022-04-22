@@ -5,7 +5,7 @@ import "@logseq/libs";
 import "./tailwind.css";
 import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
 
-let templates;
+export let smartblocks;
 
 export function updateTemplates() {
   let query = `
@@ -15,7 +15,7 @@ export function updateTemplates() {
              [(get ?p :template)]]
   `;
   logseq.DB.datascriptQuery(query).then((result) => {
-    templates = result.map((item) => item[0].properties.template);
+    smartblocks = result.map((item) => item[0].properties.template);
   });
 }
 const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
@@ -31,11 +31,11 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
     let results;
     updateTemplates();
     if (searchTerm != "") {
-      results = templates.filter((template) =>
+      results = smartblocks.filter((template) =>
         template.toLowerCase().includes(searchTerm)
       );
     } else {
-      results = templates;
+      results = smartblocks;
     }
     setSearchResults(results);
   }, [searchTerm]);

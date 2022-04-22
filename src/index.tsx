@@ -9,6 +9,7 @@ import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
 import { updateTemplates } from "./searchbar";
 import SearchBar from "./searchbar";
 import { handleClosePopup } from "./handleClosePopup";
+import InsertionUI from "./inserterUI";
 /*
  * main entry
  */
@@ -65,8 +66,13 @@ async function main() {
   logseq.useSettingsSchema(settings);
   logseq.provideModel({
     async insertTemplatedBlock(e: any) {
-      const { blockUuid, template, sibling } = e.dataset;
-      insertProperlyTemplatedBlock(blockUuid, template, sibling);
+      const { blockUuid, template, sibling, location } = e.dataset;
+      let blockUuid2 = blockUuid
+      if (await logseq.Editor.getBlock(location)!= undefined){
+        blockUuid2 = location
+      }
+      console.log(blockUuid2)
+      insertProperlyTemplatedBlock(blockUuid2, template, sibling);
     },
   }),
     logseq.provideStyle(`
@@ -87,10 +93,6 @@ async function main() {
         color: #0F9960;
     }
   `);
-  logseq.Editor.registerSlashCommand("Create SmartBlock", async () => {
-    await logseq.Editor.insertAtEditingCursor(`{{renderer :smartblock, , }} `);
-    // templaterBlock = await logseq.Editor.getCurrentBlock();
-  });
   logseq.Editor.registerSlashCommand("Create Inline  SmartBlock", async () => {
     await logseq.Editor.insertAtEditingCursor(
       `{{renderer :smartblockInline, }} `
@@ -139,16 +141,22 @@ async function main() {
     }
   });
 
-  logseq.Editor.registerSlashCommand("Create SmartBlock (guided)", async () => {
-    await logseq.Editor.insertAtEditingCursor(
-      `{{renderer :smartblock, template name, button title, sibling?}} `
-    );
+  logseq.Editor.registerSlashCommand("Create SmartBlock Button", async (e) => {
+    updateTemplates();
+    ReactDOM.render(
+      <React.StrictMode>
+        <InsertionUI blockUUID = {e.uuid}/>
+      </React.StrictMode>,
+      document.getElementById("app")
+    )
+    logseq.showMainUI()
+     handleClosePopup()
     // templaterBlock = await logseq.Editor.getCurrentBlock();
   });
 
   logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
     updateTemplates();
-    var [type, template, title, sibling] = payload.arguments;
+    var [type, template, title, sibling, location] = payload.arguments;
     if (title == undefined) {
       title = "New Template";
     }
@@ -164,7 +172,7 @@ async function main() {
         reset: true,
         slot,
         template: `
-            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling = ${sibling} data-template="${template}" data-title="${title}"
+            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling = ${sibling} data-template="${template}" data-title="${title}" data-location = "${location}"
             data-on-click="insertTemplatedBlock">${title}</button>
            `,
       });
