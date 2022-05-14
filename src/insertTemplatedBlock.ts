@@ -7,10 +7,6 @@ import {
 import { parseDynamically } from './parser';
 
 import { renderApp, valueArray } from './index';
-import { persistUUID } from './insertUUID';
-import ReactDOM from 'react-dom';
-import React from 'react';
-import App from './App';
 export var networkRequest = false
 export var stopStatus = true
 export function editNetworkRequest(value) {
