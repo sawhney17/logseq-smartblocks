@@ -4,7 +4,6 @@ import { persistUUID } from "./insertUUID";
 
 import axios from "axios";
 import { editNetworkRequest } from "./insertTemplatedBlock";
-import { BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 // set APIKEY to be equal to the api key from github secrets
 const APIKEY = process.env.APIKEY;
 async function parseRandomly(pageName: string) {
@@ -139,14 +138,24 @@ export async function parseDynamically(blockContent) {
 
   }
   if (blockContent.toLowerCase().match(pageBlock)) {
+
     let currentp3age = await logseq.Editor.getCurrentPage();
-    console.log(currentp3age);
+    if (currentp3age == null){
+      currentp3age = await logseq.Editor.getPage(getDateForPage(currentTime, preferredDateFormat))
+    }
     console.log(shouldNotEncodeURL)
+    const inputSplit = parsedInput.split(":")
+    console.log(inputSplit)
+    console.log(currentp3age)
+    if (inputSplit.length > 1) {
+      return parseProperties((inputSplit[1]), currentp3age);
+    }
+    else{
     if (currentp3age != null) {
       return shouldNotEncodeURL? currentp3age.name: encodeURIComponent(currentp3age.name);
     } else {
       return shouldNotEncodeURL? getDateForPage(currentTime, preferredDateFormat): encodeURIComponent(getDateForPage(currentTime, preferredDateFormat));
-    }
+    }}
   }
   if (blockContent.match(randomParsing)) {
     // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
@@ -181,4 +190,15 @@ export async function parseDynamically(blockContent) {
   return shouldNotEncodeURL ? getDateForPage(startDate, preferredDateFormat): encodeURIComponent(getDateForPage(startDate, preferredDateFormat));
 }
 
-function parseDates() {}
+function parseProperties(text, currentPage) {
+  const updatedText = text.replace(" ", "")
+  console.log(updatedText)
+  console.log(currentPage);
+  const propertyList = currentPage.properties[updatedText]
+  if (propertyList != undefined ){
+    return propertyList.toString()
+  }
+  else {
+    return `No property exists for key ${updatedText}`
+  }
+}
