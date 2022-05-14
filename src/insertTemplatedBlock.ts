@@ -14,7 +14,8 @@ export function editNetworkRequest(value) {
 }
 
 export var data = null
-const reg = /<%([^%].*?)%>/g
+// const reg = /<%([^%].*?)%>/g
+const reg = /<%(.*?)%>/g
 export var blockUuid2
 export var sibling
 var currentRun = 1
