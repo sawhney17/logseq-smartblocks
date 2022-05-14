@@ -83,8 +83,16 @@ export async function parseDynamically(blockContent) {
   let ifParsing = /(i+f)/gi;
   let pageBlock = /currentpage/;
   let randomParsing = /randomblock/;
+  let shouldEncodeURL = false
   let weatherQuery = /weather/;
-  let parsedInput = blockContent.slice(2, -2);
+  let parsedInput;
+  if (blockContent.match("<%%")){
+    parsedInput = blockContent.slice(3, -2);
+    shouldEncodeURL = true;
+  }
+  else {
+    parsedInput = blockContent.slice(2, -2);
+  }
   if (blockContent.match(ifParsing)) {
     let input = parsedInput.split(":");
     let spaceParsedInput = input[0].replace(/\s+/g, "");
@@ -131,16 +139,16 @@ export async function parseDynamically(blockContent) {
   if (blockContent.toLowerCase().match(pageBlock)) {
     let currentp3age = await logseq.Editor.getCurrentPage();
     if (currentp3age != null) {
-      return currentp3age.name;
+      return shouldEncodeURL? currentp3age.name: encodeURIComponent(currentp3age.name);
     } else {
-      return getDateForPage(currentTime, preferredDateFormat);
+      return shouldEncodeURL? getDateForPage(currentTime, preferredDateFormat): encodeURIComponent(getDateForPage(currentTime, preferredDateFormat));
     }
   }
   if (blockContent.match(randomParsing)) {
     // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
     let input2 = parsedInput.split("randomblock");
     let input3 = input2[1].replace(" ", "");
-    return await parseRandomly(input3);
+    return shouldEncodeURL? await parseRandomly(input3): encodeURIComponent(await parseRandomly(input3));
   }
 
   // Implement time parsing
@@ -156,17 +164,17 @@ export async function parseDynamically(blockContent) {
     } else {
       formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes();
     }
-    return formattedTime;
+    return shouldEncodeURL ? formattedTime : encodeURIComponent(formattedTime);
   }
   // Implement if parsing
   const parsedBlock = await Sherlock.parse(blockContent);
   // Destructure
-  const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
+  const { startDate } = parsedBlock;
 
   if (startDate == null) {
     return blockContent;
   }
-  return getDateForPage(startDate, preferredDateFormat);
+  return shouldEncodeURL ? getDateForPage(startDate, preferredDateFormat): encodeURIComponent(getDateForPage(startDate, preferredDateFormat));
 }
 
 function parseDates() {}

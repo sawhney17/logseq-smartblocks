@@ -43,6 +43,13 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 		- Whether you want the template to be inserted as a sibling(as a new bullet _not_ a child of the button), or as a child (indented under the button)
 - Basic structure of the button expansion is as such 
 	- `{{renderer :smartblock, journalTemplate, New Journal, false}}`
+
+### Accessing page properties
+### Encode URL method 
+1. A useful application for SmartBlocks is automatically generating URLs or iFrame embeds based on things like the page name
+2. In this case it becomes useful to format variables into page names. 
+3. Hence, by simply adding a second `%` you can have it encoded into URL format.
+	- `<%%currentPage%>`
 ### Using NLP
 1. In the templates, wherever you want a dynamic date, one that shows a different value based on the date it was inserted, use this syntax `<%NLP Input%>`
 	- `<%Today%>`

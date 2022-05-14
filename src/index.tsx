@@ -178,7 +178,7 @@ async function main() {
     }
     if (type == ":smartblock") {
       logseq.provideUI({
-        key: "SmartBlocks for Logseq",
+        key: `${slot}`,
         reset: true,
         slot,
         template: `
