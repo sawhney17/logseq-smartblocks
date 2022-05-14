@@ -4,6 +4,7 @@ import { persistUUID } from "./insertUUID";
 
 import axios from "axios";
 import { editNetworkRequest } from "./insertTemplatedBlock";
+import { BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 // set APIKEY to be equal to the api key from github secrets
 const APIKEY = process.env.APIKEY;
 async function parseRandomly(pageName: string) {
@@ -77,18 +78,19 @@ function parseConditional(condition: string, value) {
 
 export function parseVariablesOne(template) {}
 export async function parseDynamically(blockContent) {
+
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat = userConfigs.preferredDateFormat;
   let currentTime = new Date();
   let ifParsing = /(i+f)/gi;
   let pageBlock = /currentpage/;
   let randomParsing = /randomblock/;
-  let shouldEncodeURL = false
+  let shouldNotEncodeURL = true
   let weatherQuery = /weather/;
   let parsedInput;
   if (blockContent.match("<%%")){
     parsedInput = blockContent.slice(3, -2);
-    shouldEncodeURL = true;
+    shouldNotEncodeURL = false;
   }
   else {
     parsedInput = blockContent.slice(2, -2);
@@ -138,17 +140,19 @@ export async function parseDynamically(blockContent) {
   }
   if (blockContent.toLowerCase().match(pageBlock)) {
     let currentp3age = await logseq.Editor.getCurrentPage();
+    console.log(currentp3age);
+    console.log(shouldNotEncodeURL)
     if (currentp3age != null) {
-      return shouldEncodeURL? currentp3age.name: encodeURIComponent(currentp3age.name);
+      return shouldNotEncodeURL? currentp3age.name: encodeURIComponent(currentp3age.name);
     } else {
-      return shouldEncodeURL? getDateForPage(currentTime, preferredDateFormat): encodeURIComponent(getDateForPage(currentTime, preferredDateFormat));
+      return shouldNotEncodeURL? getDateForPage(currentTime, preferredDateFormat): encodeURIComponent(getDateForPage(currentTime, preferredDateFormat));
     }
   }
   if (blockContent.match(randomParsing)) {
     // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
     let input2 = parsedInput.split("randomblock");
     let input3 = input2[1].replace(" ", "");
-    return shouldEncodeURL? await parseRandomly(input3): encodeURIComponent(await parseRandomly(input3));
+    return shouldNotEncodeURL? await parseRandomly(input3): encodeURIComponent(await parseRandomly(input3));
   }
 
   // Implement time parsing
@@ -164,7 +168,7 @@ export async function parseDynamically(blockContent) {
     } else {
       formattedTime = currentTime.getHours() + ":" + currentTime.getMinutes();
     }
-    return shouldEncodeURL ? formattedTime : encodeURIComponent(formattedTime);
+    return shouldNotEncodeURL ? formattedTime : encodeURIComponent(formattedTime);
   }
   // Implement if parsing
   const parsedBlock = await Sherlock.parse(blockContent);
@@ -174,7 +178,7 @@ export async function parseDynamically(blockContent) {
   if (startDate == null) {
     return blockContent;
   }
-  return shouldEncodeURL ? getDateForPage(startDate, preferredDateFormat): encodeURIComponent(getDateForPage(startDate, preferredDateFormat));
+  return shouldNotEncodeURL ? getDateForPage(startDate, preferredDateFormat): encodeURIComponent(getDateForPage(startDate, preferredDateFormat));
 }
 
 function parseDates() {}
