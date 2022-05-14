@@ -1,5 +1,6 @@
 import '@logseq/libs'
 import {
+  BlockEntity,
   IBatchBlock,
 } from '@logseq/libs/dist/LSPlugin.user';
 
@@ -31,6 +32,7 @@ async function triggerParse(obj) {
       let formattedMatch = await parseDynamically(currentMatch);
       let newRegexString = toBeParsed.replace(currentMatch, formattedMatch)
       obj.content = newRegexString
+      obj.properties = {}
     }
   }
   currentRun += 1
