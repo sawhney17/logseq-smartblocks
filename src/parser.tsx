@@ -148,7 +148,7 @@ export async function parseDynamically(blockContent) {
     console.log(inputSplit)
     console.log(currentp3age)
     if (inputSplit.length > 1) {
-      return parseProperties((inputSplit[1]), currentp3age);
+      return shouldNotEncodeURL? parseProperties((inputSplit[1]), currentp3age): encodeURIComponent(parseProperties((inputSplit[1]), currentp3age))
     }
     else{
     if (currentp3age != null) {
