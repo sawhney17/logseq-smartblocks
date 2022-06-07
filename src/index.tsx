@@ -197,7 +197,7 @@ async function main() {
         );
       } else {
         logseq.provideUI({
-          key: "SmartBlocksInline for Logseq",
+          key: `${slot}`,
           reset: true,
           slot,
           template: `
