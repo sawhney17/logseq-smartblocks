@@ -64,7 +64,8 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
     const results = ret?.flat()
 
     if (results && results.length > 0) {
-      refUUID = results[0].uuid.$uuid$
+      console.log("hejehnkj")
+      refUUID = results[0].uuid.uuid
       const origBlock = await logseq.Editor.getBlock(refUUID, {
         includeChildren: true,
       });
