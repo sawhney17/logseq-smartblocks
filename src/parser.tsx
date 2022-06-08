@@ -3,7 +3,7 @@ import Sherlock from "sherlockjs";
 import { persistUUID } from "./insertUUID";
 
 import axios from "axios";
-import { editNetworkRequest } from "./insertTemplatedBlock";
+import { blockUuid2, editNetworkRequest } from "./insertTemplatedBlock";
 // set APIKEY to be equal to the api key from github secrets
 const APIKEY = process.env.APIKEY;
 async function parseRandomly(pageName: string) {
@@ -139,10 +139,11 @@ export async function parseDynamically(blockContent) {
   }
   if (blockContent.toLowerCase().match(pageBlock)) {
 
-    let currentp3age = await logseq.Editor.getCurrentPage();
-    if (currentp3age == null){
-      currentp3age = await logseq.Editor.getPage(getDateForPage(currentTime, preferredDateFormat))
-    }
+    // let currentp3age = await logseq.Editor.getCurrentPage();
+    let currentp3age = await logseq.Editor.getPage((await logseq.Editor.getBlock(blockUuid2)).page.id)
+    // if (currentp3age == null){
+    //   currentp3age = await logseq.Editor.getPage(getDateForPage(currentTime, preferredDateFormat))
+    // }
     console.log(shouldNotEncodeURL)
     const inputSplit = parsedInput.split(":")
     console.log(inputSplit)
@@ -152,7 +153,7 @@ export async function parseDynamically(blockContent) {
     }
     else{
     if (currentp3age != null) {
-      return shouldNotEncodeURL? currentp3age.name: encodeURIComponent(currentp3age.name);
+      return shouldNotEncodeURL? currentp3age.originalName: encodeURIComponent(currentp3age.name);
     } else {
       return shouldNotEncodeURL? getDateForPage(currentTime, preferredDateFormat): encodeURIComponent(getDateForPage(currentTime, preferredDateFormat));
     }}
