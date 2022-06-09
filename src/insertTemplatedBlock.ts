@@ -37,8 +37,15 @@ async function triggerParse(obj) {
 }
 
 export function triggerParseInitially(obj) {
+  console.log("run")
+  console.log(obj)
   if (obj.content) {
     let regexMatched = obj.content.match(reg)
+    // delete obj.uuid
+    // delete obj.id
+    // delete obj.left
+    // delete obj.parent
+    // delete obj.pathRefs
     for (const x in regexMatched) {
       var currentMatch = regexMatched[x]
       if (currentMatch.toLowerCase().includes("setinput:")) {
@@ -63,45 +70,47 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
     let ret = await logseq.DB.datascriptQuery(query)
     const results = ret?.flat()
 
+    console.log("results")
     if (results && results.length > 0) {
-      console.log("hejehnkj")
-      refUUID = results[0].uuid.uuid
-      const origBlock = await logseq.Editor.getBlock(refUUID, {
+      refUUID = results[0].uuid.$uuid$
+      console.log(refUUID)
+      logseq.Editor.getBlock(refUUID, {
         includeChildren: true,
-      });
-      data = origBlock
-      triggerParseInitially(data)
-      if (valueArray.length > 0) {
-        renderApp()
-        logseq.showMainUI()
-      }
-      else {
-        logseq.hideMainUI({ restoreEditingCursor: true });
-        insertProperlyTemplatedBlock2(blockUuid3, sibling3, origBlock)
-      }
+      }).then((origBlock) => {
+        console.log(origBlock)
+        triggerParseInitially(origBlock)
+        console.log("valueArray")
+        if (valueArray.length > 0) {
+          renderApp()
+          logseq.showMainUI()
+        }
+        else {
+          logseq.hideMainUI({ restoreEditingCursor: true });
+          insertProperlyTemplatedBlock2(blockUuid3, sibling3, origBlock)
+        }
+      })
+
     }
   } catch (error) {
   }
-
-
 }
 export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlock) {
   data = origBlock
   async function insertFinally() {
-  let page = await logseq.Editor.getPage(blockUuid)
-    if (page != undefined){
+    let page = await logseq.Editor.getPage(blockUuid)
+    if (page != undefined) {
       console.log(
         "iserting"
       )
       console.log(blockUuid)
       let blockTree = (await logseq.Editor.getPageBlocksTree(blockUuid))
-      let lastBlock = blockTree[blockTree.length-1]
-      logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children as unknown as IBatchBlock, {sibling: true})
+      let lastBlock = blockTree[blockTree.length - 1]
+      logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children as unknown as IBatchBlock, { sibling: true })
     }
-    else{
-      logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true')})
+    else {
+      logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') })
     }
-    
+
   }
 
   triggerParse(data)
