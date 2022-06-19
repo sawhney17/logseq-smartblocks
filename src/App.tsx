@@ -42,14 +42,14 @@ function triggerParse(obj) {
   obj.children.map(triggerParse);
 }
 
-interface formValues{
+export interface FormValues {
   name: string
   value: string
-  options? : string[]
+  options?: string[]
 }
 const App = () => {
   //Add type annotation to the state
-  const [formValues, setFormValues] = useState<formValues[]>([]);
+  const [formValues, setFormValues] = useState<FormValues[]>([]);
   const [isOpened, setIsOpened] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -64,8 +64,10 @@ const App = () => {
   let updateUI2 = () => {
     let newFormValues = [...formValues];
     for (const x in valueArray) {
-      newFormValues.push({ name: valueArray[x].variable, value: "" });
+      console.log(valueArray)
+      newFormValues.push(valueArray[x]);
     }
+    console.log(formValues)
     setFormValues(newFormValues);
     setIsSubmitted(true);
     setIsOpened((wasOpened) => !wasOpened);
@@ -112,19 +114,32 @@ const App = () => {
           {formValues.map((element, index) => {
             console.log(element)
             return (
-            <div
-              className="grid grid-cols-2 gap-4 place-items-auto py-2"
-              key={index}
-            >
-              <label className="labelClass">{valueArray[index].variable}</label>
-              <input
-                type="text"
-                name="name"
-                className="text-black"
-                value={formValues[index].value}
-                onChange={(e) => handleChange(index, e)}
-              />
-            </div>)
+              <div
+                className="grid grid-cols-2 gap-4 place-items-auto py-2"
+                key={index}
+              >
+                <label className="labelClass">{valueArray[index].name}</label>
+                {element.options ? (
+                  <select name="Options" id="cars">
+                    {element.options.map((option) => {
+                      return (
+                        <option value={option}>{option}</option>
+                      )
+                    })}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    name="name"
+                    value={formValues[index].value}
+                    onChange={(e) => handleChange(index, e)}>
+                  </input>
+                )
+                  // })
+                  // }
+                }
+              </div>
+            )
           })}
           <div className="button-section"></div>
           {isOpened && <label>Would you like to insert with inputs?</label>}

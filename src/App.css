@@ -626,3 +626,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
 .searchItem{
   color: #ffffff
 }
+.css-1na68kg .MuiOutlinedInput-root {
+  padding: 0px;
+}
+
+select {
+  color: black !important;
+}
+
+input {
+  color: black !important;
+}

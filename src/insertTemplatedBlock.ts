@@ -47,7 +47,10 @@ export function triggerParseInitially(obj) {
     for (const x in regexMatched) {
       var currentMatch = regexMatched[x]
       if (currentMatch.toLowerCase().includes("setinput:")) {
-        valueArray.push({ variable: currentMatch.slice(2, -2).split(":")[1], name: "" })
+        const inputs = currentMatch.slice(2, -2).split(":")
+        const variableName = inputs[1]
+        const variableOptions = inputs[2]?.split(",")
+        variableOptions ? valueArray.push({ value: "", name: variableName, options: variableOptions }) : valueArray.push({ value: "", name: variableName })
       }
     }
   }

@@ -4,7 +4,7 @@ import Sherlock from "sherlockjs";
 import { getDateForPage, getDateForPageWithoutBrackets } from "logseq-dateutils";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import App, { FormValues } from "./App";
 import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
 import { updateTemplates } from "./searchbar";
 import SearchBar from "./searchbar";
@@ -51,11 +51,11 @@ async function checkTemplate(uuid) {
 }
 
 export var valueCount = 0;
-export var valueArray = [];
+export var valueArray: FormValues[] = [];
 export var currentValueCount = 0;
 export var currentValueArray = [];
 
-export function editValueArray(value: Array<object>) {
+export function editValueArray(value: FormValues[]) {
   valueArray = value;
 }
 export function valueZero() {
