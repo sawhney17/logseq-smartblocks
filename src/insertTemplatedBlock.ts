@@ -37,8 +37,6 @@ async function triggerParse(obj) {
 }
 
 export function triggerParseInitially(obj) {
-  console.log("run")
-  console.log(obj)
   if (obj.content) {
     let regexMatched = obj.content.match(reg)
     // delete obj.uuid
@@ -70,25 +68,21 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
     let ret = await logseq.DB.datascriptQuery(query)
     const results = ret?.flat()
 
-    console.log("results")
     if (results && results.length > 0) {
       refUUID = results[0].uuid.$uuid$
-      console.log(refUUID)
-      logseq.Editor.getBlock(refUUID, {
+      let origBlock = await logseq.Editor.getBlock(refUUID, {
         includeChildren: true,
-      }).then((origBlock) => {
-        console.log(origBlock)
-        triggerParseInitially(origBlock)
-        console.log("valueArray")
-        if (valueArray.length > 0) {
-          renderApp()
-          logseq.showMainUI()
-        }
-        else {
-          logseq.hideMainUI({ restoreEditingCursor: true });
-          insertProperlyTemplatedBlock2(blockUuid3, sibling3, origBlock)
-        }
       })
+      data = origBlock
+      triggerParseInitially(origBlock)
+      if (valueArray.length > 0) {
+        renderApp()
+        logseq.showMainUI()
+      }
+      else {
+        logseq.hideMainUI({ restoreEditingCursor: true });
+        insertProperlyTemplatedBlock2(blockUuid3, sibling3, origBlock)
+      }
 
     }
   } catch (error) {
@@ -102,7 +96,6 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
       console.log(
         "iserting"
       )
-      console.log(blockUuid)
       let blockTree = (await logseq.Editor.getPageBlocksTree(blockUuid))
       let lastBlock = blockTree[blockTree.length - 1]
       logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children as unknown as IBatchBlock, { sibling: true })

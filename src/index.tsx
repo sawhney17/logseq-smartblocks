@@ -62,7 +62,8 @@ export function valueZero() {
   valueArray = [];
 }
 async function main() {
-  updateTemplates();
+  updateTemplates()
+  // logseq.App.onCurrentGraphChanged(updateTemplates)
   logseq.useSettingsSchema(settings);
   logseq.provideModel({
     async insertTemplatedBlock(e: any) {
@@ -140,6 +141,7 @@ async function main() {
     }
   }, async (e) => {
     if (e.uuid != null){
+      updateTemplates();
       handleClosePopup()
       ReactDOM.render(
         <React.StrictMode>
