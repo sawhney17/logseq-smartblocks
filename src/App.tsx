@@ -8,6 +8,7 @@ import {
   blockUuid2,
   sibling,
 } from "./insertTemplatedBlock";
+import { Autocomplete } from "@mui/material";
 
 var replacementArray = {};
 function triggerParse(obj) {
@@ -41,8 +42,14 @@ function triggerParse(obj) {
   obj.children.map(triggerParse);
 }
 
+interface formValues{
+  name: string
+  value: string
+  options? : string[]
+}
 const App = () => {
-  const [formValues, setFormValues] = useState([]);
+  //Add type annotation to the state
+  const [formValues, setFormValues] = useState<formValues[]>([]);
   const [isOpened, setIsOpened] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -71,7 +78,6 @@ const App = () => {
 
   let handleSubmit = (event) => {
     event.preventDefault();
-    // alert(JSON.stringify(formValues));
     setIsSubmitted(false);
     setIsOpened(true);
     setFormValues([]);
@@ -103,7 +109,9 @@ const App = () => {
       <div className="overlay" onClick={resetExit}></div>
       <div className="flex justify-center w-screen">
         <form onSubmit={handleSubmit} className="smartblock-inserter" id="form">
-          {formValues.map((element, index) => (
+          {formValues.map((element, index) => {
+            console.log(element)
+            return (
             <div
               className="grid grid-cols-2 gap-4 place-items-auto py-2"
               key={index}
@@ -116,8 +124,8 @@ const App = () => {
                 value={formValues[index].value}
                 onChange={(e) => handleChange(index, e)}
               />
-            </div>
-          ))}
+            </div>)
+          })}
           <div className="button-section"></div>
           {isOpened && <label>Would you like to insert with inputs?</label>}
           <div className="grid-container">
