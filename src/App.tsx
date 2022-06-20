@@ -52,7 +52,14 @@ const App = () => {
   const [formValues, setFormValues] = useState<FormValues[]>([]);
   const [isOpened, setIsOpened] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [something, setSomething] = useState(false);
 
+  //force remount the component upon formValues changing
+  React.useEffect(() => {
+    setFormValues(formValues);
+    console.log(something)
+  }
+  , [formValues]);
   let resetExit = (event) => {
     event.preventDefault();
     setIsSubmitted(false);
@@ -77,6 +84,11 @@ const App = () => {
     newFormValues[i]["value"] = e.target.value;
     setFormValues(newFormValues);
   };
+  let handleChange2 = (i, e) => {
+    let newFormValues = [...formValues];
+    newFormValues[i]["value"] = e.target.value;
+    setFormValues(newFormValues);
+  }
 
   let handleSubmit = (event) => {
     event.preventDefault();
@@ -86,6 +98,10 @@ const App = () => {
     editValueArray(formValues);
     logseq.hideMainUI({ restoreEditingCursor: true });
     for (const x in valueArray) {
+      //if value is empty and there exists options, use the first option instead
+      if (valueArray[x].value === "" && valueArray[x].options) {
+        valueArray[x].value = valueArray[x].options[0];
+      }
       const value = valueArray[x].value;
       const name = valueArray[x].name;
       replacementArray[name] = value;
@@ -121,10 +137,9 @@ const App = () => {
                 <label className="labelClass">{valueArray[index].name}</label>
                 {element.options ? (
                   <select name="Options"
+                  id = {`selectionNumber${index}`}
                     onChange={(event) => {
-                      let newFormValues = formValues
-                      newFormValues[index].value = event.target.value
-                      setFormValues(newFormValues)
+                      handleChange2(index, event);
                     }}
                     value={formValues[index].value}
                     >
