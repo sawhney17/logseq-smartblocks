@@ -37,7 +37,9 @@ async function triggerParse(obj) {
 }
 
 export function triggerParseInitially(obj) {
+  console.log(obj)
   if (obj.content) {
+    
     let regexMatched = obj.content.match(reg)
     // delete obj.uuid
     // delete obj.id
@@ -70,7 +72,6 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
   try {
     let ret = await logseq.DB.datascriptQuery(query)
     const results = ret?.flat()
-
     if (results && results.length > 0) {
       refUUID = results[0].uuid.$uuid$
       let origBlock = await logseq.Editor.getBlock(refUUID, {

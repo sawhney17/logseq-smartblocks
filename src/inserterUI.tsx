@@ -53,14 +53,20 @@ const InsertionUI: React.FC<{ blockUUID }> = (blockUUID) => {
   const handleSubmit = async () => {
     console.log(location)
     let finalString;
-    setLocation(location.title.replaceAll("(", "").replaceAll(")", ""))
+
+    let actualLocation = location !== null ? location.title
+      .replaceAll("(", "")
+      .replaceAll(")", "")
+      .replace('Block with uuid: ', "")
+      .replace("NLP Parse: ", "")
+      : null;
     let newTitle = title
     if (title == "") {
       console.log("his")
       newTitle = "New Smartblock"
     }
-    if (location.length > 0) {
-      finalString = `{{renderer :smartblock, ${smartblocks[smartblockIndex]}, ${newTitle}, ${sibling}, ${location}}}`
+    if (actualLocation !== null) {
+      finalString = `{{renderer :smartblock, ${smartblocks[smartblockIndex]}, ${newTitle}, ${sibling}, ${actualLocation}}}`
     }
     else {
       finalString = `{{renderer :smartblock, ${smartblocks[smartblockIndex]}, ${newTitle}, ${sibling}}}`
@@ -100,14 +106,13 @@ const InsertionUI: React.FC<{ blockUUID }> = (blockUUID) => {
               }}
               filterOptions={(options, params) => {
                 const filtered = filter(options, params);
-
                 const { inputValue } = params;
                 // Suggest the creation of a new value
                 const isExisting = options.some((option) => inputValue === option.title);
                 if (inputValue !== '' && !isExisting) {
                   filtered.push({
                     //@ts-expect-error
-                    title: inputValue.match(uuidRegex)? `NLP Parse "${inputValue}"`: `Block with uuid: ${inputValue}`,
+                    title: inputValue.match(uuidRegex) ? `Block with uuid: ${inputValue}` : `NLP Parse: "${inputValue}"`,
                   });
                 }
 
@@ -136,7 +141,7 @@ const InsertionUI: React.FC<{ blockUUID }> = (blockUUID) => {
               renderInput={(params) => (
                 <TextField {...params} />
               )}
-              style={{ backgroundColor: "white" , display: "inline-block", padding: "0px", width: "100%"}}
+              style={{ backgroundColor: "white", display: "inline-block", padding: "0px", width: "100%" }}
             />
           </div>
           <div className="grid grid-cols-2 pb-2">

@@ -71,17 +71,21 @@ async function main() {
       const { blockUuid, template, sibling, location } = e.dataset;
       let blockUuid2: string = blockUuid
       console.log(location)
+      console.log(location.match(uuidRegex))
       if (location == "" || location == "undefined"){
           blockUuid2 = blockUuid
+          console.log(`THis is the fun${location}`)
+          console.log(location.match(uuidRegex))
       }
-      else if (await logseq.Editor.getBlock(location.match(uuidRegex)[0])!= undefined || (await logseq.Editor.getPage(location)!= undefined)){
+      else if (location.match(uuidRegex)!= null || (await logseq.Editor.getPage(location)!= undefined)){
         blockUuid2 = location
-        console.log(location)
+        console.log(`THis is the ${location}`)
       }
       else {
         const parsedBlock = await Sherlock.parse(location);
         const { isAllDay, eventTitle, startDate, endDate } = parsedBlock;
         blockUuid2 = getDateForPageWithoutBrackets(startDate, (await logseq.App.getUserConfigs()).preferredDateFormat)
+        console.log(`THis is not the ${location}`)
     }
       console.log(blockUuid2)
       insertProperlyTemplatedBlock(blockUuid2, template, sibling);
@@ -194,7 +198,7 @@ async function main() {
       if (!(await checkTemplate(payload.uuid))) {
         logseq.Editor.updateBlock(payload.uuid, "");
         await insertProperlyTemplatedBlock(payload.uuid, template, title).then(
-          function (result) {
+          () => {
             logseq.Editor.updateBlock(payload.uuid, "");
           }
         );
