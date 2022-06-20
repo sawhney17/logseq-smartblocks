@@ -10,6 +10,7 @@ import { updateTemplates } from "./searchbar";
 import SearchBar from "./searchbar";
 import { handleClosePopup } from "./handleClosePopup";
 import InsertionUI from "./inserterUI";
+import { uuidRegex } from "./utils";
 /*
  * main entry
  */
@@ -68,12 +69,12 @@ async function main() {
   logseq.provideModel({
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling, location } = e.dataset;
-      let blockUuid2 = blockUuid
+      let blockUuid2: string = blockUuid
       console.log(location)
       if (location == "" || location == "undefined"){
           blockUuid2 = blockUuid
       }
-      else if (await logseq.Editor.getBlock(location)!= undefined || (await logseq.Editor.getPage(location)!= undefined)){
+      else if (await logseq.Editor.getBlock(location.match(uuidRegex)[0])!= undefined || (await logseq.Editor.getPage(location)!= undefined)){
         blockUuid2 = location
         console.log(location)
       }
