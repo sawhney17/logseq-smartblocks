@@ -120,7 +120,14 @@ const App = () => {
               >
                 <label className="labelClass">{valueArray[index].name}</label>
                 {element.options ? (
-                  <select name="Options" id="cars">
+                  <select name="Options"
+                    onChange={(event) => {
+                      let newFormValues = formValues
+                      newFormValues[index].value = event.target.value
+                      setFormValues(newFormValues)
+                    }}
+                    value={formValues[index].value}
+                    >
                     {element.options.map((option) => {
                       return (
                         <option value={option}>{option}</option>
