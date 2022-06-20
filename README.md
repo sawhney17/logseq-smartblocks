@@ -81,6 +81,11 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 	-`<randomblock twitter>`
 	-`<randomblock Tasks Inbox>`
 
+### Set inputs and use variables
+- You can ask the user for inputs. You can then reuse this input multiple times in the smartblock
+- To set an input, use `<setInput: variableName%>`
+- If you'd like you give a dropdown list of options, use `<%setInput: variableName:comma,separated,options%>`
+- To get the input of an already set input, i.e. if you want to use something twice, do `<%getInput: variableName%>`
 ### Using the weather function
 - Makes it possible to grab the current weather from Open Weather Map API
 - Format used is `<%weatherf Dubai%>`
