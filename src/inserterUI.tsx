@@ -62,10 +62,12 @@ const InsertionUI: React.FC<{ blockUUID }> = (blockUUID) => {
       : null;
     let newTitle = title
     if (title == "") {
-      console.log("his")
       newTitle = "New Smartblock"
     }
+    console.log(smartblockIndex)
+      console.log(smartblocks)
     if (actualLocation !== null) {
+      
       finalString = `{{renderer :smartblock, ${smartblocks[smartblockIndex]}, ${newTitle}, ${sibling}, ${actualLocation}}}`
     }
     else {

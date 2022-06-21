@@ -75,7 +75,7 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
       }
     }
     if (e.keyCode === 13) {
-      //Up arrow
+      //EnterKey arrow
       insertProperlyTemplatedBlock(
         blockID,
         searchResults[highlightedResult],

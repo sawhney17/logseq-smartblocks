@@ -167,7 +167,7 @@ async function main() {
       document.getElementById("app")
     )
     logseq.showMainUI()
-     handleClosePopup()
+    handleClosePopup()
     // templaterBlock = await logseq.Editor.getCurrentBlock();
   });
 
