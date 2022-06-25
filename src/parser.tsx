@@ -193,13 +193,15 @@ export async function parseDynamically(blockContent) {
 
 function parseProperties(text, currentPage) {
   const updatedText = text.replace(" ", "")
-  console.log(updatedText)
-  console.log(currentPage);
-  const propertyList = currentPage.properties[updatedText]
+  //Convert dash case to camel case
+  const camelCaseText = updatedText.replace(/-([a-z])/g, function (g) {
+    return g[1].toUpperCase();
+  });
+  const propertyList = currentPage.properties[camelCaseText]
   if (propertyList != undefined ){
     return propertyList.toString()
   }
   else {
-    return `No property exists for key ${updatedText}`
+    return `No property exists for key ${camelCaseText}`
   }
 }
