@@ -145,17 +145,23 @@ async function main() {
       mode: 'global',
     }
   }, async (e) => {
-    if (e.uuid != null){
-      updateTemplates();
-      handleClosePopup()
-      ReactDOM.render(
-        <React.StrictMode>
-          <SearchBar blockID={e.uuid} />
-        </React.StrictMode>,
-        document.getElementById("app")
-      )
-      logseq.showMainUI()
-    }
+    updateTemplates().then(()=>{
+      if (e.uuid != null){
+        updateTemplates();
+        handleClosePopup()
+        ReactDOM.render(
+          <React.StrictMode>
+            <SearchBar blockID={e.uuid} />
+          </React.StrictMode>,
+          document.getElementById("app")
+        )
+        logseq.showMainUI()
+      }
+      else {
+        logseq.UI.showMsg("Error: not in a block")
+      }
+    })
+    
   });
 
   logseq.Editor.registerSlashCommand("Create SmartBlock Button", async (e) => {
