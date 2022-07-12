@@ -24,6 +24,14 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
   const [highlightedResult, setHighlightedResult] = React.useState(null);
   const firstUpdate = useRef(true);
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      const input = document.getElementById("smartblockSearchbar");
+      if (input) {
+        input.focus();
+      }
+    }, 100);
+  }, []);
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -109,6 +117,7 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
             placeholder="Search for a Smartblock..."
             value={searchTerm}
             onChange={handleChange}
+            id="smartblockSearchbar"
           />
           <ul className="w-full text-sm">
             {searchResults.map((item) => (
