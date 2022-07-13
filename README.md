@@ -81,6 +81,9 @@ Currently porting features from the official Smartblocks from Roam plugin. Feel 
 	-`<randomblock twitter>`
 	-`<randomblock Tasks Inbox>`
 
+### Call renderers using randUUID
+- If you'd like to integrate things like the wordcount plugin, you can do so by generating a random alphanumeric using using <%randUUID%>
+- {{renderer :wordcount_<%randUUID%>}} will insert a new word counter whenever the smartblock is called provided the word counter plugin is installed
 ### Set inputs and use variables
 - You can ask the user for inputs. You can then reuse this input multiple times in the smartblock
 - To set an input, use `<setInput: variableName%>`
