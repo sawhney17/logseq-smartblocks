@@ -7,16 +7,16 @@ import { insertProperlyTemplatedBlock } from "./insertTemplatedBlock";
 
 export let smartblocks;
 
-export function updateTemplates() {
+export async function updateTemplates() {
   let query = `
   [:find (pull ?b [*])
              :where
              [?b :block/properties ?p]
              [(get ?p :template)]]
   `;
-  logseq.DB.datascriptQuery(query).then((result) => {
+    let result = await logseq.DB.datascriptQuery(query)
     smartblocks = result.map((item) => item[0].properties.template);
-  });
+    return result.map((item) => item[0].properties.template);
 }
 const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
   const [searchTerm, setSearchTerm] = React.useState("");

@@ -82,7 +82,8 @@ export async function parseDynamically(blockContent) {
   const preferredDateFormat = userConfigs.preferredDateFormat;
   let currentTime = new Date();
   let ifParsing = /(i+f)/gi;
-  let pageBlock = /currentpage/;
+  let pageBlock = /currentpage/gi;
+  let uuid = /randUUID/i;
   let randomParsing = /randomblock/;
   let shouldNotEncodeURL = true
   let weatherQuery = /weather/;
@@ -110,6 +111,7 @@ export async function parseDynamically(blockContent) {
       return "";
     }
   }
+
   if (blockContent.match(weatherQuery)) {
       try {
         
@@ -138,16 +140,9 @@ export async function parseDynamically(blockContent) {
 
   }
   if (blockContent.toLowerCase().match(pageBlock)) {
-
     // let currentp3age = await logseq.Editor.getCurrentPage();
     let currentp3age = await logseq.Editor.getPage((await logseq.Editor.getBlock(blockUuid2)).page.id)
-    // if (currentp3age == null){
-    //   currentp3age = await logseq.Editor.getPage(getDateForPage(currentTime, preferredDateFormat))
-    // }
-    console.log(shouldNotEncodeURL)
     const inputSplit = parsedInput.split(":")
-    console.log(inputSplit)
-    console.log(currentp3age)
     if (inputSplit.length > 1) {
       return shouldNotEncodeURL? parseProperties((inputSplit[1]), currentp3age): encodeURIComponent(parseProperties((inputSplit[1]), currentp3age))
     }
@@ -157,6 +152,9 @@ export async function parseDynamically(blockContent) {
     } else {
       return shouldNotEncodeURL? getDateForPage(currentTime, preferredDateFormat): encodeURIComponent(getDateForPage(currentTime, preferredDateFormat));
     }}
+  }
+  if (blockContent.match(uuid)){
+    return ("wxy" + Math.random().toString(36).slice(2))
   }
   if (blockContent.match(randomParsing)) {
     // let spaceParsedInput = parsedInput.replace(/\s+/g, '');
