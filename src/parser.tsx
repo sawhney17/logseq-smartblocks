@@ -83,7 +83,7 @@ export async function parseDynamically(blockContent) {
   let currentTime = new Date();
   let ifParsing = /(i+f)/gi;
   let pageBlock = /currentpage/gi;
-  let uuid = /randUUID/i;
+  let uuid = /randUUID/gi;
   let randomParsing = /randomblock/;
   let shouldNotEncodeURL = true
   let weatherQuery = /weather/;
