@@ -28,7 +28,7 @@ let settings: SettingSchemaDesc[] = [
   {
     key: "Keyboard-Shortcut",
     type: "string",
-    title: "Keyboard Shortcut for Triggering Smartbocks",
+    title: "Keyboard Shortcut for Triggering Smartblocks",
     description: "keyboard shortcut to trigger smartblock insertion window",
     default: "mod+t"
   }
