@@ -73,11 +73,15 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
     let ret = await logseq.DB.datascriptQuery(query)
     const results = ret?.flat()
     if (results && results.length > 0) {
-      refUUID = results[0].uuid.$uuid$
+      refUUID = results[0].uuid
+      console.log(refUUID)
+      console.log(results)
       let origBlock = await logseq.Editor.getBlock(refUUID, {
         includeChildren: true,
       })
       data = origBlock
+      console.log("origBlock")
+      console.log(origBlock)
       triggerParseInitially(origBlock)
       if (valueArray.length > 0) {
         renderApp()
