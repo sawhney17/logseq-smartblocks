@@ -14,7 +14,7 @@ async function parseRandomly(pageName: string) {
 
   let results = await logseq.DB.datascriptQuery(query);
   let flattenedResults = results.map((mappedQuery) => ({
-    uuid: mappedQuery[0].uuid["$uuid$"],
+    uuid: mappedQuery[0].uuid,
   }));
 
   let index = Math.floor(Math.random() * flattenedResults.length);
