@@ -1,7 +1,8 @@
 >If this plugin helps you, I'd really appreciate your support. You can [buy me a coffee here. ](https://www.buymeacoffee.com/sawhney17)
 # SmartBlocks for Logseq
+![GitHub all releases](https://img.shields.io/github/downloads/sawhney17/logseq-smartblocks/total) ![version](https://img.shields.io/github/package-json/v/sawhney17/logseq-smartblocks)
 
-This plugin allows you to create a templater button, which on click, inserts the contents of the template you've specified, under the block. Allows for advanced features and workflows. 
+This plugin enables advanced templating workflows within logseq. 
 
 Currently porting features from the official Smartblocks from Roam plugin. Feel free to ping me on twitter [@aryansawhney17](https://twitter.com/aryansawhney17), or file a github issue for any feedback or feature requests. 
 
