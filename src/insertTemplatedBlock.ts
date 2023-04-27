@@ -21,7 +21,7 @@ export var blockUuid2: BlockUUID
 export var sibling: boolean
 var currentRun = 1
 var previousRun = 0
-async function triggerParse(obj: IBatchBlock) {
+async function triggerParse(obj: IBatchBlock): Promise<IBatchBlock> {
   if (obj.content) {
     let regexMatched = obj.content.match(reg)
     for (const x in regexMatched) {
@@ -34,7 +34,20 @@ async function triggerParse(obj: IBatchBlock) {
     }
   }
   currentRun += 1
-  await obj.children.map(triggerParse)
+  if (obj.content !== "") { // the block isn't blank
+    if (obj.children && obj.children.length > 0) {
+      // parse children blocks
+      obj.children = await Promise.all(obj.children.map(triggerParse))
+
+      // remove any blocks that parse as null
+      obj.children = obj.children.filter((x) => x !== null)
+    }
+  }
+  else { // the block has been parsed and is blank
+    // remove the block
+    obj = null
+  }
+  return obj
 }
 
 export function triggerParseInitially(obj) {
@@ -114,7 +127,7 @@ export async function insertProperlyTemplatedBlock2(blockUuid: BlockUUID, insert
 
   }
 
-  triggerParse(data)
+  data = await triggerParse(data)
   timeOutShouldBeSet()
   function checkDiff() {
 
