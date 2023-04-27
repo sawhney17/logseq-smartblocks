@@ -87,13 +87,13 @@ const SearchBar: React.FC<{ blockID }> = ({ blockID }) => {
       insertProperlyTemplatedBlock(
         blockID,
         searchResults[highlightedResult],
-        "true"
+        true
       );
     }
     e.handled = true;
   }
   const insertBlocks = (e) => {
-    insertProperlyTemplatedBlock(blockID, e.target.id, "true");
+    insertProperlyTemplatedBlock(blockID, e.target.id, true);
   };
   const updateHighlight = () => {
     for (const x in searchResults) {

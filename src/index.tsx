@@ -1,5 +1,5 @@
 import "@logseq/libs";
-import { IBatchBlock, SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
+import { BlockUUID, IBatchBlock, SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
 import Sherlock from "sherlockjs";
 import { getDateForPage, getDateForPageWithoutBrackets } from "logseq-dateutils";
 import React from "react";
@@ -51,15 +51,15 @@ async function checkTemplate(uuid) {
   }
 }
 
-export var valueCount = 0;
+// export var valueCount = 0;
 export var valueArray: FormValues[] = [];
-export var currentValueCount = 0;
-export var currentValueArray = [];
+// export var currentValueCount = 0;
+// export var currentValueArray = [];
 
 export function editValueArray(value: FormValues[]) {
   valueArray = value;
 }
-export function valueZero() {
+export function clearValueArray() {
   valueArray = [];
 }
 async function main() {
@@ -69,7 +69,7 @@ async function main() {
   logseq.provideModel({
     async insertTemplatedBlock(e: any) {
       const { blockUuid, template, sibling, location } = e.dataset;
-      let blockUuid2: string = blockUuid
+      let blockUuid2: BlockUUID = blockUuid
       console.log(location)
       console.log(location.match(uuidRegex))
       if (location == "" || location == "undefined"){
@@ -195,7 +195,7 @@ async function main() {
         reset: true,
         slot,
         template: `
-            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling = ${sibling} data-template="${template}" data-title="${title}" data-location = "${location}"
+            <button class="templater-btn" data-block-uuid="${payload.uuid}" data-sibling=${sibling} data-template="${template}" data-title="${title}" data-location="${location}"
             data-on-click="insertTemplatedBlock">${title}</button>
            `,
       });
@@ -203,7 +203,7 @@ async function main() {
     if (type == ":smartblockInline") {
       if (!(await checkTemplate(payload.uuid))) {
         logseq.Editor.updateBlock(payload.uuid, "");
-        await insertProperlyTemplatedBlock(payload.uuid, template, title).then(
+        await insertProperlyTemplatedBlock(payload.uuid, template, title === "true").then(
           () => {
             logseq.Editor.updateBlock(payload.uuid, "");
           }

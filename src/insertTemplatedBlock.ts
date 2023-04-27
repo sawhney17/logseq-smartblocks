@@ -1,6 +1,7 @@
 import '@logseq/libs'
 import {
   BlockEntity,
+  BlockUUID,
   IBatchBlock,
 } from '@logseq/libs/dist/LSPlugin.user';
 
@@ -13,14 +14,14 @@ export function editNetworkRequest(value) {
   networkRequest = value
 }
 
-export var data = null
+export var data: IBatchBlock = null
 // const reg = /<%([^%].*?)%>/g
 const reg = /<%(.*?)%>/g
-export var blockUuid2
-export var sibling
+export var blockUuid2: BlockUUID
+export var sibling: boolean
 var currentRun = 1
 var previousRun = 0
-async function triggerParse(obj) {
+async function triggerParse(obj: IBatchBlock) {
   if (obj.content) {
     let regexMatched = obj.content.match(reg)
     for (const x in regexMatched) {
@@ -37,9 +38,8 @@ async function triggerParse(obj) {
 }
 
 export function triggerParseInitially(obj) {
-  console.log(obj)
+  // console.log(obj)
   if (obj.content) {
-    
     let regexMatched = obj.content.match(reg)
     // delete obj.uuid
     // delete obj.id
@@ -55,11 +55,11 @@ export function triggerParseInitially(obj) {
         variableOptions ? valueArray.push({ value: "", name: variableName, options: variableOptions }) : valueArray.push({ value: "", name: variableName })
       }
     }
+    obj.children.forEach(triggerParseInitially)
   }
-  obj.children.map(triggerParseInitially)
 }
 
-export async function insertProperlyTemplatedBlock(blockUuid3, template2, sibling3) {
+export async function insertProperlyTemplatedBlock(blockUuid3: BlockUUID, template2, insertAsSibling: boolean) {
   var query = `
   [:find (pull ?b [*])
  :where
@@ -67,10 +67,10 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
  [(get ?p :template) ?ty]
  [(= "${template2}" ?ty)]]`
   blockUuid2 = blockUuid3
-  sibling = sibling3
-  let refUUID
+  sibling = insertAsSibling
+  let refUUID: BlockUUID
   try {
-    let ret = await logseq.DB.datascriptQuery(query)
+    let ret = await logseq.DB.datascriptQuery<BlockEntity[]>(query)
     const results = ret?.flat()
     if (results && results.length > 0) {
       refUUID = results[0].uuid
@@ -79,7 +79,7 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
       let origBlock = await logseq.Editor.getBlock(refUUID, {
         includeChildren: true,
       })
-      data = origBlock
+      data = origBlock as IBatchBlock
       console.log("origBlock")
       console.log(origBlock)
       triggerParseInitially(origBlock)
@@ -89,27 +89,27 @@ export async function insertProperlyTemplatedBlock(blockUuid3, template2, siblin
       }
       else {
         logseq.hideMainUI({ restoreEditingCursor: true });
-        insertProperlyTemplatedBlock2(blockUuid3, sibling3, origBlock)
+        insertProperlyTemplatedBlock2(blockUuid3, insertAsSibling, origBlock as IBatchBlock)
       }
 
     }
   } catch (error) {
   }
 }
-export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlock) {
+export async function insertProperlyTemplatedBlock2(blockUuid: BlockUUID, insertAsSibling: boolean, origBlock: IBatchBlock) {
   data = origBlock
   async function insertFinally() {
     let page = await logseq.Editor.getPage(blockUuid)
     if (page != undefined) {
       console.log(
-        "iserting"
+        "inserting"
       )
       let blockTree = (await logseq.Editor.getPageBlocksTree(blockUuid))
       let lastBlock = blockTree[blockTree.length - 1]
-      logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children as unknown as IBatchBlock, { sibling: true })
+      logseq.Editor.insertBatchBlock(lastBlock.uuid, data.children, { sibling: true })
     }
     else {
-      logseq.Editor.insertBatchBlock(blockUuid, data.children as unknown as IBatchBlock, { sibling: (sibling2 === 'true') })
+      logseq.Editor.insertBatchBlock(blockUuid, data.children, { sibling: insertAsSibling })
     }
 
   }
@@ -130,7 +130,7 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
         }, 500);
       }
       else {
-        logseq.App.showMsg("Run has begun")
+        logseq.UI.showMsg("Run has begun")
         insertFinally()
       }
     }
@@ -141,7 +141,7 @@ export async function insertProperlyTemplatedBlock2(blockUuid, sibling2, origBlo
     }, 100);
   }
   if (origBlock.children.length === 0 || !origBlock.children) {
-    logseq.App.showMsg("Whoops! Doesn't look like there's any content under the template.");
+    logseq.UI.showMsg("Whoops! Doesn't look like there's any content under the template.");
   }
 }
   // }

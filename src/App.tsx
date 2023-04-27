@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getDateForPage } from "logseq-dateutils";
-import { valueArray, valueZero, editValueArray } from "./index";
+import { valueArray, clearValueArray, editValueArray } from "./index";
 import "./App.css";
 import {
   data,
@@ -65,7 +65,7 @@ const App = () => {
     setIsSubmitted(false);
     setIsOpened(true);
     setFormValues([]);
-    valueZero();
+    clearValueArray();
     logseq.hideMainUI({ restoreEditingCursor: true });
   };
   let updateUI2 = () => {
@@ -107,7 +107,7 @@ const App = () => {
       replacementArray[name] = value;
     }
     triggerParse(data);
-    valueZero();
+    clearValueArray();
     insertProperlyTemplatedBlock2(blockUuid2, sibling, data);
   };
 
